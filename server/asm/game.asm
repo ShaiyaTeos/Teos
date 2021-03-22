@@ -7,13 +7,16 @@ dd      new_size_rdata
 
 va_section  .text
 ; Patch: Modify the text that gets printed when the log starts.
-va_org      0x403D5D
+va_org      0x403D53
+push        git_hash
+add         eax, 0xE0
 push        game_log_text
 
 va_section  .rdata
 ; Add a string to the end of the read-only data.
 va_org          rdata_end
-game_log_text   db          'PS_GAME__system log start (%s) [Cups]', 0, 0
+%include                    "asm/metadata.asm"
+game_log_text   db          'PS_GAME__system log start [Teos - Rev %s]', 0, 0
 
 ; Calculate the new size of the read-only data.
 new_size_rdata  equ         $-$$

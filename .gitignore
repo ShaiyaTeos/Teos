@@ -1,0 +1,7 @@
+# Ignore IntelliJ
+.idea
+*.iml
+
+# Ignore generated code
+/server/ps_game.exe
+/server/asm/metadata.asm
