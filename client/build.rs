@@ -5,9 +5,6 @@ use std::io::Write;
 /// The entry point for the Teos build script, which runs some additional code
 /// before building the DLL. This includes modifying the assembly of the `game` binary.
 fn main() {
-    // Get the workspace directory
-    let dir = std::env::var("OUT_DIR").unwrap();
-
     // Run the assembler
     Command::new("nasm")
         .args(&["-o", "../game.exe"])
