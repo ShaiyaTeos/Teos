@@ -19,6 +19,14 @@ jmp         write_login_ip_addr
 va_org      0x40BCEB
 jmp         0x40BDBC
 
+; Patch: Update the window title when the user selects a character
+va_org      0x46F890
+jmp         update_window_title_char_name
+
+; Patch: Reset the window title when we enter the character screen
+va_org      0x5B5070
+jmp         reset_window_title
+
 ; Include read-only resources
 va_section  .rdata
 
