@@ -1,4 +1,4 @@
-<img align="right" alt="Teos logo" width="100" src="../etc/logo.png">
+<img align="right" alt="Teos logo" width="100" src="../etc/teos.png">
 
 # Shaiya Teos
 A project which aims to modify the original Ep4 Shaiya files in order to provide modern
