@@ -1,7 +1,5 @@
-; generated using version 0.0.6
-
-%ifndef ps0198_20_9_2012_game_pe_inc
-%define ps0198_20_9_2012_game_pe_inc
+%ifndef client_pe_inc
+%define client_pe_inc
 
 %ifndef ptarget
     %define ptarget "bin/ps0198-20-9-2012-game.exe"
