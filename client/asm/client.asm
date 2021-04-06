@@ -23,6 +23,15 @@ jmp         0x40BDBC
 va_org      0x46F890
 jmp         update_window_title_char_name
 
+; Patch: Update the map clock format
+va_org      0x4D012A
+push        map_clock_format
+
+; Patch: Update the position of the clock text.
+va_org      0x4D0185
+jmp         adjust_clock_text
+nop
+
 ; Patch: Reset the window title when we enter the character screen
 va_org      0x5B5070
 jmp         reset_window_title
@@ -39,6 +48,7 @@ va_section  .teos
 %include    "asm/metadata.asm"
 %include    "asm/network.asm"
 %include    "asm/window.asm"
+%include    "asm/map_clock.asm"
 
 ; Append the rest of the data
 va_org      end
