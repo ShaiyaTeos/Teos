@@ -2,7 +2,7 @@
 %define ps_game_pe_inc
 
 %ifndef ptarget
-    %define ptarget "ps_game_original.exe"  ; Define the input target
+    %define ptarget "bin/ps_game_original.exe"  ; Define the input target
 %endif
 
 imagebase       equ         0x400000    ; Base address of the image
@@ -35,11 +35,23 @@ rsize.data      equ         0x3000
 data_vsize      equ         0x3A94E88
 data_end        equ         virt.data + data_vsize
 
+; .teos (custom code segment)
+virt.teos       equ         imagebase + 0x3BD5000
+raw.teos        equ         0x143000
+rsize.teos      equ         0x2000
+teos_vsize      equ         0x2000
+teos_end        equ         virt.teos + teos_vsize
+
+; Define the address of the custom import table section
+teos_iat            equ     0x3FD7000
+teos_startup_rva    equ     0xEF
+
 ; pre-define all sections
                 section     .hdrs   vstart=virt.hdrs
                 section     .text   vstart=virt.text    follows=.hdrs
                 section     .rdata  vstart=virt.rdata   follows=.text
                 section     .data   vstart=virt.data    follows=.rdata
+                section     .teos   vstart=virt.teos    follows=.data
 
 ; start in the .hdrs pseudo section
                 section     .hdrs

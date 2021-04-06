@@ -9,6 +9,12 @@ crate-type  = ["cdylib"] # Compile the library as a C-compatible dynamic library
 
 [dependencies]
 anyhow              = "1.0"
+byteorder           = "1.4.3"
+chrono              = "0.4.19"
+lazy_static         = "1.4.0"
+tiberius            = "0.5.12"
+tokio               = { version = "1.4.0", features = ["full", "tracing"] }
+tokio-util          = { version = "0.6.5", features = ["compat"] }
 tracing             = "0.1"
 tracing-appender    = "0.1.2"
 tracing-subscriber  = "0.2"

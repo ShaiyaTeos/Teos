@@ -1,0 +1,10 @@
+[package]
+name        = "teos-client"
+version     = "0.1.0"
+authors     = ["Cups <cups@shaiya.net>"]
+edition     = "2018"
+
+[lib]
+crate-type  = ["cdylib"] # Compile the library as a C-compatible dynamic library
+
+[dependencies]
