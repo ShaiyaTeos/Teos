@@ -1,46 +1,53 @@
-%ifndef client_pe_inc
-%define client_pe_inc
+%ifndef client_pe_asm
+%define client_pe_asm
 
 %ifndef ptarget
     %define ptarget "bin/ps0198-20-9-2012-game.exe"
 %endif
 
-imagebase       equ         0400000h
+imagebase       equ         0x400000
 
 ; .hdrs
 virt.hdrs       equ         imagebase
-raw.hdrs        equ         00h
-rsize.hdrs      equ         0400h
-hdrs_vsize      equ         02d0h
+raw.hdrs        equ         0x00
+rsize.hdrs      equ         0x400
+hdrs_vsize      equ         0x2F8
 hdrs_end        equ         virt.hdrs + hdrs_vsize
 
 ; .text
-virt.text       equ         imagebase + 01000h
-raw.text        equ         0400h
-rsize.text      equ         02fe200h
-text_vsize      equ         02fe131h
+virt.text       equ         imagebase + 0x1000
+raw.text        equ         0x400
+rsize.text      equ         0x2FE200
+text_vsize      equ         0x2FE131
 text_end        equ         virt.text + text_vsize
 
 ; .rdata
-virt.rdata      equ         imagebase + 0300000h
-raw.rdata       equ         02fe600h
-rsize.rdata     equ         05d000h
-rdata_vsize     equ         05cebah
+virt.rdata      equ         imagebase + 0x300000
+raw.rdata       equ         0x2FE600
+rsize.rdata     equ         0x5D000
+rdata_vsize     equ         0x5CEBA
 rdata_end       equ         virt.rdata + rdata_vsize
 
 ; .data
-virt.data       equ         imagebase + 035d000h
-raw.data        equ         035b600h
-rsize.data      equ         014200h
-data_vsize      equ         01b52bb8h
+virt.data       equ         imagebase + 0x35D000
+raw.data        equ         0x35B600
+rsize.data      equ         0x14200
+data_vsize      equ         0x1B52BB8
 data_end        equ         virt.data + data_vsize
 
 ; .rsrc
-virt.rsrc       equ         imagebase + 01eb0000h
-raw.rsrc        equ         036f800h
-rsize.rsrc      equ         0be00h
-rsrc_vsize      equ         0bcfch
+virt.rsrc       equ         imagebase + 0x1EB0000
+raw.rsrc        equ         0x36F800
+rsize.rsrc      equ         0xBE00
+rsrc_vsize      equ         0xBCFC
 rsrc_end        equ         virt.rsrc + rsrc_vsize
+
+; .teos
+virt.teos       equ         imagebase + 0x1EBC000
+raw.teos        equ         0x37B600
+rsize.teos      equ         0x1000
+teos_vsize      equ         0x1000
+teos_end        equ         virt.teos + teos_vsize
 
 ; pre-define all sections
                 section     .hdrs vstart=virt.hdrs
@@ -48,6 +55,7 @@ rsrc_end        equ         virt.rsrc + rsrc_vsize
                 section     .rdata vstart=virt.rdata follows=.text
                 section     .data vstart=virt.data follows=.rdata
                 section     .rsrc vstart=virt.rsrc follows=.data
+                section     .teos vstart=virt.teos follows=.rsrc
 
 ; start in the .hdrs pseudo section
                 section     .hdrs

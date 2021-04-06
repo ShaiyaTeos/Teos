@@ -11,7 +11,7 @@ fn main() {
     println!("cargo:rustc-env=GIT_REF={}", git_ref);
 
     // Set the GIT_HASH environment variable
-    let commit_hash_output = Command::new("git").args(&["rev-parse", "HEAD"]).output().unwrap();
+    let commit_hash_output = Command::new("git").args(&["rev-parse", "--short", "HEAD"]).output().unwrap();
     let git_hash = String::from_utf8(commit_hash_output.stdout).unwrap();
     println!("cargo:rustc-env=GIT_HASH={}", git_hash);
 

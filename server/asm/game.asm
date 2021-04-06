@@ -5,8 +5,8 @@ bits        32
 va_org  0x400220
 dd      new_size_rdata
 
-va_section  .text
 ; =========================================================================================================
+va_section  .text
 ; Patch: Modify the text that gets printed when the log starts.
 va_org      0x403D53
 jmp         modify_game_log_text
@@ -41,14 +41,12 @@ va_org          rdata_end
 game_log_text   db          "PS_GAME__system log start (%s) [Teos - (branch=%s, rev=%s)]", 0
 
 ; ========================================================================================================
+new_size_rdata  equ         $-$$    ; Size of the read-only data.
 va_section  .data
 ; Turn NProtect off by default
 g_bUseNProtect  equ         0x541F7C
 va_org          g_bUseNProtect
 db              0
-
-; Calculate the new size of the read-only data.
-new_size_rdata  equ         $-$$
 
 ; Include data for the custom code segment
 va_section  .teos

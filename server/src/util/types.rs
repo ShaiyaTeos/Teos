@@ -5,6 +5,10 @@ pub struct FixedLengthArray<const N: usize> {
 }
 
 impl<const N: usize> FixedLengthArray<N> {
+    /// Populates a `FixedLengthArray` with the data from a slice of bytes.
+    ///
+    /// # Arguments
+    /// * `bytes`   - The input bytes.
     pub fn new(bytes: &[u8]) -> Self {
         let mut data: [u8; N] = [0; N];
 
@@ -18,6 +22,10 @@ impl<const N: usize> FixedLengthArray<N> {
         FixedLengthArray { data }
     }
 
+    /// Populates a `FixedLengthArray` with the data from a string.
+    ///
+    /// # Arguments
+    /// * `text`    - The input string.
     pub fn from_str(text: &str) -> Self {
         Self::new(text.as_bytes())
     }
