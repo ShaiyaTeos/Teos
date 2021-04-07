@@ -4,15 +4,42 @@ use crate::{get_sql_client, user, TEOS};
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use std::sync::Arc;
 use std::time::Duration;
+use crate::models::packets::CharacterAdditionalStats;
 
 /// The maximum packet size
 const MAXIMUM_PACKET_SIZE: usize = 2046;
+
+/// Gets executed when the user's stats are updated.
+///
+/// # Arguments
+/// * `user`    - The character instance.
+pub extern "stdcall" fn on_user_set_attack(user: *mut CUser) {
+    let char = unsafe { user.as_ref().unwrap() };
+    let mut additional_stats = CharacterAdditionalStats::new();
+
+    // The "yellow stats" are equal to the total stat, less the base stat.
+    additional_stats.yellow_strength = 1;
+    additional_stats.yellow_dexterity = 2;
+    additional_stats.yellow_reaction = 3;
+    additional_stats.yellow_intelligence = 4;
+    additional_stats.yellow_wisdom = 5;
+    additional_stats.yellow_luck = 6;
+
+    additional_stats.min_physical_attack = 123;
+    additional_stats.max_physical_attack = 456;
+    additional_stats.min_magic_attack = 234;
+    additional_stats.max_magic_attack = 567;
+    additional_stats.defense = 333;
+    additional_stats.resistance = 444;
+    char.send(&additional_stats);
+}
 
 /// Gets executed when a user connects to the game world.
 ///
 /// # Arguments
 /// * `user`    - The loaded character instance.
-pub extern "stdcall" fn on_user_connect(user: *mut CUser) {}
+pub extern "stdcall" fn on_user_connect(user: *mut CUser) {
+}
 
 /// Gets executed when the server receives a packet from the user. If this function returns
 /// true, the original packet processing function will return and not operate on this packet.
@@ -28,7 +55,6 @@ pub extern "stdcall" fn on_user_recv_packet(user: *mut CUser, packet: *mut u8) -
         let opcode = LittleEndian::read_u16(payload);
         let mut teos = TEOS.lock().unwrap();
         teos.log(format!("recv opcode {:#X}", opcode));
-
         if opcode == 0x030A || opcode == 0x0309 {
             return true;
         }

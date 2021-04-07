@@ -29,6 +29,11 @@ impl<const N: usize> FixedLengthArray<N> {
     pub fn from_str(text: &str) -> Self {
         Self::new(text.as_bytes())
     }
+
+    /// Gets this `FixedLengthArray` as a string.
+    pub fn as_string(&self) -> String {
+        String::from_utf8_lossy(self.data.as_slice()).to_string()
+    }
 }
 
 impl<const N: usize> Default for FixedLengthArray<N> {

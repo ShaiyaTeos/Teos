@@ -21,6 +21,10 @@ va_org      0x44A831
 jmp         cuser_enter_world
 times       2   nop
 
+; Patch: Call our custom SetAttack function after the stats are calculated.
+va_org      0x454553
+jmp         cuser_set_attack_end
+
 ; Patch: Call our custom function when a user sends a packet.
 va_org      0x466DCB
 jmp         cuser_packet_recv

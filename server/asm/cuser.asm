@@ -25,6 +25,10 @@ cuser_on_packet_recv:
 cuser_send_character_list_addr:
     dd 0
 
+; The address to set the user's attack
+cuser_set_attack_addr:
+    dd 0
+
 ; The new initialisation routine
 cuser_create:
     ;mov eax, dword [cuser_size]
@@ -85,3 +89,11 @@ cuser_send_character_list:
     pop edi
     mov byte [ebp + cuser_enable_char_select_offset], al ; Enable character selection if characters were found.
     jmp cuser_char_list_retn
+
+; Send additional stats when setting the user's attack.
+cuser_set_attack_end:
+    push ecx
+    call dword [cuser_set_attack_addr]
+    pop esi
+    add esp, 36
+    retn
