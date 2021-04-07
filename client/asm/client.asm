@@ -32,6 +32,10 @@ va_org      0x4D0185
 jmp         adjust_clock_text
 nop
 
+; Patch: Adjust the amount of statpoints that are allocated.
+va_org      0x51017F
+jmp         allocate_stat_points
+
 ; Patch: Reset the window title when we enter the character screen
 va_org      0x5B5070
 jmp         reset_window_title
@@ -49,6 +53,7 @@ va_section  .teos
 %include    "asm/network.asm"
 %include    "asm/window.asm"
 %include    "asm/map_clock.asm"
+%include    "asm/statpoints.asm"
 
 ; Append the rest of the data
 va_org      end
