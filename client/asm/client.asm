@@ -15,6 +15,12 @@ jmp         get_window_title
 va_org      0x408BD3
 jmp         write_login_ip_addr
 
+; Patch: Enable multi-client.
+va_org      0x40B91C
+jmp         short 0x40B96C
+va_org      0x40B97A
+jmp         short 0x40B9AD
+
 ; Patch: Don't require the updater start params.
 va_org      0x40BCEB
 jmp         0x40BDBC
