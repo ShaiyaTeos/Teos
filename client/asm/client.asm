@@ -7,6 +7,11 @@ dd      new_size_rdata
 
 ; =========================================================================================================
 va_section  .text
+; Patch: Always flag the window as focused.
+va_org      0x407958
+jmp         flag_window_focused
+nop
+
 ; Patch: Customise the window title.
 va_org      0x4081FD
 jmp         get_window_title
@@ -64,6 +69,7 @@ va_section  .teos
 %include    "asm/window.asm"
 %include    "asm/map_clock.asm"
 %include    "asm/statpoints.asm"
+%include    "asm/antifreeze.asm"
 
 ; Append the rest of the data
 va_org      end
