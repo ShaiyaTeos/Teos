@@ -23,6 +23,10 @@ jmp         0x40BDBC
 va_org      0x46F890
 jmp         update_window_title_char_name
 
+; Patch: Display map images for dungeons
+va_org      0x4C8827
+je          short 0x4C8837  ; By using "je short" we can guarantee it's a relative jump, as this should occupy only 2 bytes.
+
 ; Patch: Update the map clock format
 va_org      0x4D012A
 push        map_clock_format
