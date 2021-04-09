@@ -9,15 +9,11 @@ console_command_addr:
 
 ; Call our custom command function
 console_command:
-    push ecx
-    mov ecx, dword [console_command_addr]
-
     ; Call our custom function
     push edi    ; Output string
     push eax    ; Length of input text
     push ebx    ; Input text
-    call ecx
-    pop ecx
+    call dword [console_command_addr]
 
     ; If the function returned "true", we should no longer parse the command
     test al,al
