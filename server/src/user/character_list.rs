@@ -19,7 +19,7 @@ pub async fn send_character_list(
     mut client: Client<Compat<TcpStream>>,
 ) -> anyhow::Result<()> {
     // The user uid
-    let user_uid = 1; //user.billing_id;
+    let user_uid = user.billing_id;
 
     // Execute the procedure to load the user's characters.
     let mut stream = client

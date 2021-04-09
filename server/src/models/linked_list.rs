@@ -1,7 +1,6 @@
 use crate::models::RtCriticalSection;
 
-#[repr(C)]
-#[repr(packed)]
+#[repr(C, packed)]
 #[derive(Debug)]
 pub struct SSyncList<T> {
     head: *const T,
@@ -11,16 +10,14 @@ pub struct SSyncList<T> {
     mem_head: SNode
 }
 
-#[repr(C)]
-#[repr(packed)]
+#[repr(C, packed)]
 #[derive(Debug)]
 pub struct SNode {
     prev: *const SNode,
     next: *const SNode
 }
 
-#[repr(C)]
-#[repr(packed)]
+#[repr(C, packed)]
 #[derive(Debug)]
 pub struct SNode2 {
     inner: SNode,
