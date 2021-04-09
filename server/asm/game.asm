@@ -29,9 +29,17 @@ jmp         cuser_set_attack_end
 va_org      0x466DCB
 jmp         cuser_packet_recv
 
-; Patch: Call our custom SendCharacterList function;
+; Patch: Call our custom SendCharacterList function.
 va_org      0x46D06C
 jmp         cuser_send_character_list
+
+; Patch: Send the updated TP_CHAR_DATA packet.
+;va_org      0x48314E
+;jmp         cuser_send_character_details
+
+; Patch: Modify the summon packet.
+va_org      0x48DB14
+jmp         write_summon_packet
 
 ; Patch: Call our custom function when the admin sends a console command.
 va_org      0x4D5EB4
@@ -58,4 +66,5 @@ va_section  .teos
 %include    "asm/game_log_text.asm"
 %include    "asm/cuser.asm"
 %include    "asm/command.asm"
+%include    "asm/summon.asm"
 va_org          end

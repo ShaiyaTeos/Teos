@@ -51,9 +51,17 @@ nop
 va_org      0x51017F
 jmp         allocate_stat_points
 
+ ; Patch: Add the destination map to the summon dialogue box.
+va_org      0x5361BF
+jmp         write_summon_destination
+
 ; Patch: Reset the window title when we enter the character screen
 va_org      0x5B5070
 jmp         reset_window_title
+
+; Patch: Read the map id from the summon packet.
+va_org      0x5BE6C5
+jmp         read_summon_packet
 
 ; Include read-only resources
 va_section  .rdata
@@ -70,6 +78,7 @@ va_section  .teos
 %include    "asm/map_clock.asm"
 %include    "asm/statpoints.asm"
 %include    "asm/antifreeze.asm"
+%include    "asm/summon.asm"
 
 ; Append the rest of the data
 va_org      end

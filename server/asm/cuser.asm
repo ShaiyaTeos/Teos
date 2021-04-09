@@ -8,6 +8,7 @@ cuser_packet_retn               equ 0x466DD6
 cuser_bad_handshake             equ 0x466E62
 cuser_char_list_retn            equ 0x46D726
 cuser_enable_char_select_offset equ 0x57C0
+cuser_details_send_bank         equ 0x48328B
 
 ; The new size of the CUser structure.
 cuser_size:
@@ -27,6 +28,10 @@ cuser_send_character_list_addr:
 
 ; The address to set the user's attack
 cuser_set_attack_addr:
+    dd 0
+
+; The address to send the user's details
+cuser_send_details_addr:
     dd 0
 
 ; The new initialisation routine
@@ -97,3 +102,9 @@ cuser_set_attack_end:
     pop esi
     add esp, 36
     retn
+
+; Send the character's details
+cuser_send_character_details:
+    push esi
+    call dword [cuser_send_details_addr]
+    jmp cuser_details_send_bank

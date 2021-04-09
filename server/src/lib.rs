@@ -8,7 +8,7 @@ mod models;
 mod user;
 mod util;
 
-use crate::hooks::{on_console_command, on_user_connect, on_user_recv_packet, send_character_list, on_user_set_attack};
+use crate::hooks::{on_console_command, on_user_connect, on_user_recv_packet, send_character_list, on_user_set_attack, send_user_details, send_summon_request};
 use crate::models::{CObjectConnection, CUser, SConnection};
 use chrono::{Datelike, Local, Timelike};
 use lazy_static::lazy_static;
@@ -111,6 +111,8 @@ pub extern "stdcall" fn startup(
     console_command_addr: *mut usize,
     send_char_list_addr: *mut usize,
     cuser_set_attack_addr: *mut usize,
+    cuser_send_details_addr: *mut usize,
+    cuser_summon_addr: *mut usize,
 ) {
     // Initialise the Teos addon.
     let mut teos = TEOS.lock().unwrap();
@@ -153,6 +155,18 @@ pub extern "stdcall" fn startup(
         teos.log(format!(
             "Initialised on_user_set_attack to {:#X}",
             *cuser_set_attack_addr as usize
+        ));
+
+        *cuser_send_details_addr = send_user_details as usize;
+        teos.log(format!(
+            "Initialised send_user_details to {:#X}",
+            *cuser_send_details_addr as usize
+        ));
+
+        *cuser_summon_addr = send_summon_request as usize;
+        teos.log(format!(
+            "Initialised send_summon_request to {:#X}",
+            *cuser_summon_addr as usize
         ));
     }
 
