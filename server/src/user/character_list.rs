@@ -92,6 +92,7 @@ fn row_to_character_packet(row: &Row) -> anyhow::Result<packets::CharacterListPa
     packet.dexterity = row.get("Dex").unwrap();
     packet.reaction = row.get("Rec").unwrap();
     packet.intelligence = row.get("Int").unwrap();
+    packet.wisdom = row.get("Wis").unwrap();
     packet.luck = row.get("Luc").unwrap();
     packet.hitpoints = row.get("HP").unwrap();
     packet.stamina = row.get("SP").unwrap();
