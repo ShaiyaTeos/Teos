@@ -22,6 +22,20 @@ impl<const N: usize> FixedLengthArray<N> {
         FixedLengthArray { data }
     }
 
+    /// Gets the capacity of this array.
+    pub fn capacity(&self) -> usize {
+        N
+    }
+
+    /// Sets a value in the array.
+    ///
+    /// # Arguments
+    /// * `index`   - The index to mutate.
+    /// * `value`   - The new value.
+    pub fn set(&mut self, index: usize, value: u8) {
+        self.data[index] = value
+    }
+
     /// Populates a `FixedLengthArray` with the data from a string.
     ///
     /// # Arguments

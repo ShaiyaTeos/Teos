@@ -58,15 +58,12 @@ cuser_enter_world:
 ; Gets executed when a packet is received from a player.
 cuser_packet_recv:
     ; Call the library function.
-    push eax
-    mov eax, dword [cuser_on_packet_recv]
     push esi
     push edi
-    call eax
+    call dword [cuser_on_packet_recv]
 
     ; If the library returned true, we should no longer handle the packet.
     test al,al
-    pop eax
     jne cuser_packet_recv_cancel
 
     ; If the first packet isn't a handshake, close the connection.
