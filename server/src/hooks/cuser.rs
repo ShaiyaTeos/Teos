@@ -43,6 +43,11 @@ pub extern "stdcall" fn send_user_details(user: *mut CUser) {
     let char = unsafe { user.as_ref().unwrap() };
 }
 
+/// Sends a summon request packet from a user, to a target player.
+///
+/// # Arguments
+/// * `user`    - The user sending the packet..
+/// * `target`  - The player who should receive the summon request.
 pub extern "stdcall" fn send_summon_request(user: *mut CUser, target: *mut CUser) {
     let user = unsafe { user.as_ref().unwrap() };
     let target = unsafe { target.as_ref().unwrap() };
@@ -51,23 +56,6 @@ pub extern "stdcall" fn send_summon_request(user: *mut CUser, target: *mut CUser
     packet.id = user.info.char_id;
     packet.map = user.info.map;
     target.send(&packet);
-}
-
-
-macro_rules! offset_of {
-    ($Struct:path, $field:ident) => ({
-        // Using a separate function to minimize unhygienic hazards
-        // (e.g. unsafety of #[repr(packed)] field borrows).
-        // Uncomment `const` when `const fn`s can juggle pointers.
-        /*const*/ fn offset() -> usize {
-            let u = $crate::mem::MaybeUninit::<$Struct>::uninitialized();
-            // Use pattern-matching to avoid accidentally going through Deref.
-            let &$Struct { $field: ref f, .. } = unsafe { &*u.as_ptr() };
-            let o = (f as *const _ as usize).wrapping_sub(&u as *const _ as usize);
-            o
-        }
-        offset()
-    })
 }
 
 /// Gets executed when a user connects to the game world.
