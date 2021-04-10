@@ -8,7 +8,7 @@ cuser_packet_retn               equ 0x466DD6
 cuser_bad_handshake             equ 0x466E62
 cuser_char_list_retn            equ 0x46D726
 cuser_enable_char_select_offset equ 0x57C0
-cuser_details_send_bank         equ 0x48328B
+cuser_details_send_bank         equ 0x4830C0
 
 ; The new size of the CUser structure.
 cuser_size:
@@ -105,6 +105,19 @@ cuser_set_attack_end:
 
 ; Send the character's details
 cuser_send_character_details:
-    push esi
+    ; Cdecl function prologue
+    push ebp
+    mov ebp, esp
+
+    ; Call the library function to send the user details.
+    push ecx
     call dword [cuser_send_details_addr]
-    jmp cuser_details_send_bank
+
+    ; Send the user's billing items (bank)
+    push ecx
+    call cuser_details_send_bank
+
+    ; Restore the stack
+    mov esp, ebp
+    pop ebp
+    retn

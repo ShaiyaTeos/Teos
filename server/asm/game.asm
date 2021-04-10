@@ -1,6 +1,9 @@
 %include    "asm/ps_game.asm"
 bits        32
 
+security_check_cookie   equ 0x505316 ; Check cookie function
+security_cookie_default equ 0x54059C ; The address containing the default cookie value.
+
 ; Update the virtual size on the read-only section header.
 va_org  0x400220
 dd      new_size_rdata
@@ -34,8 +37,8 @@ va_org      0x46D06C
 jmp         cuser_send_character_list
 
 ; Patch: Send the updated TP_CHAR_DATA packet.
-;va_org      0x48314E
-;jmp         cuser_send_character_details
+va_org      0x483140
+jmp         cuser_send_character_details
 
 ; Patch: Modify the summon packet.
 va_org      0x48DB14

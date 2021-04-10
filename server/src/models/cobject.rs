@@ -4,12 +4,12 @@ use crate::models::{RtCriticalSection, SConnection, SNode, SVector};
 #[repr(packed)]
 #[derive(Debug)]
 pub struct CObject {
-    pos: SVector,
+    pub pos: SVector,
     pub id: u32,
-    zone: u32,
-    cell_x: u32,
-    cell_z: u32,
-    link: CObjectLink,
+    pub zone: u32,
+    pub cell_x: u32,
+    pub cell_z: u32,
+    pub link: CObjectLink,
 }
 
 #[repr(C)]

@@ -4,7 +4,7 @@ use crate::{get_sql_client, user, TEOS};
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use std::sync::Arc;
 use std::time::Duration;
-use crate::models::packets::{CharacterAdditionalStats, SummonRequest};
+use crate::models::packets::{CharacterAdditionalStats, SummonRequest, CharacterDetails};
 use crate::util::types::FixedLengthArray;
 
 /// The maximum packet size
@@ -41,6 +41,14 @@ pub extern "stdcall" fn on_user_set_attack(user: *mut CUser) {
 /// * `user`    - The user instance.
 pub extern "stdcall" fn send_user_details(user: *mut CUser) {
     let char = unsafe { user.as_ref().unwrap() };
+    let mut packet = CharacterDetails::new();
+    let pos = &char.connection.object.pos;
+
+    // Position vector
+    packet.x = pos.x;
+    packet.y = pos.y;
+    packet.z = pos.z;
+    char.send(&packet);
 }
 
 /// Sends a summon request packet from a user, to a target player.

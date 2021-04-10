@@ -1,8 +1,7 @@
-#[repr(C)]
-#[repr(packed)]
+#[repr(C, packed)]
 #[derive(Debug)]
 pub struct SVector {
-    x: f32,
-    y: f32,
-    z: f32
+    pub x: f32,
+    pub y: f32,
+    pub z: f32
 }
