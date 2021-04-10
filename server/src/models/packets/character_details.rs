@@ -21,7 +21,7 @@ pub struct CharacterDetails {
     pub deaths: u32,
     pub victories: u32,
     pub defeats: u32,
-    pub guild_name: FixedLengthArray<21>
+    pub guild_name: FixedLengthArray<25>
 }
 
 impl CharacterDetails {

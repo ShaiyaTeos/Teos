@@ -44,6 +44,10 @@ pub extern "stdcall" fn send_user_details(user: *mut CUser) {
     let mut packet = CharacterDetails::new();
     let pos = &char.connection.object.pos;
 
+    // Stat and skillpoints
+    packet.statpoints = char.info.stat_points;
+    packet.skillpoints = char.info.skill_points;
+
     // Position vector
     packet.x = pos.x;
     packet.y = pos.y;
