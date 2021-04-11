@@ -52,6 +52,10 @@ dd          gm_name_color
 va_org      0x46F890
 jmp         update_window_title_char_name
 
+; Patch: Apply the shadow on the item stack quantity to all item types.
+va_org      0x4A8E52
+je          0x4A8F02
+
 ; Patch: Modify the loading screen delay
 va_org      0x4C1D11
 dd          loading_screen_delay
