@@ -2,7 +2,7 @@ copyright_x_offset  equ 78  ; The horizontal offset of the copyright text.
 
 ; The text to display as the copyright footer when first loading the client.
 copyright_text:
-    times 256   db 0
+    times 64   db 0
 
 ; The copyright footer format.
 copyright_text_format:
