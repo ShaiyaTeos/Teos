@@ -1,0 +1,1 @@
+user_status equ 0x8BDA5C    ; The address where the user's GM status is stored.

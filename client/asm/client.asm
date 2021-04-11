@@ -81,9 +81,13 @@ nop
 va_org      0x51017F
 jmp         allocate_stat_points
 
- ; Patch: Add the destination map to the summon dialogue box.
+; Patch: Add the destination map to the summon dialogue box.
 va_org      0x5361BF
 jmp         write_summon_destination
+
+; Patch: Add extra information to the debug text.
+va_org      0x5500E6
+jmp         format_debug_info
 
 ; Patch: Reset the window title when we enter the character screen
 va_org      0x5B5070
@@ -113,6 +117,8 @@ va_section  .teos
 %include    "asm/copyright.asm"
 %include    "asm/loading.asm"
 %include    "asm/cooldowns.asm"
+%include    "asm/debug.asm"
+%include    "asm/player.asm"
 
 ; Append the rest of the data
 va_org      end
