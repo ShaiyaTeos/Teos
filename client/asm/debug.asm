@@ -5,7 +5,7 @@ debug_retn  equ 0x550101    ; The address to return to.
 
 ; The debug string format.
 debug_info_format:
-    db "fps=%3.2f mx=%d, my=%d", 0
+    db "fps=%3.2f, mx=%d, my=%d", 0
 
 ; Format the debug info.
 format_debug_info:
