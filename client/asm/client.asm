@@ -30,6 +30,20 @@ jmp         short 0x40B9AD
 va_org      0x40BCEB
 jmp         0x40BDBC
 
+; Patch: Update the copyright logo
+va_org      0x42CB3A
+push        copyright_logo
+
+; Patch: Update the copyright footer.
+va_org      0x42CD60
+push        copyright_text
+va_org      0x42CD73
+dd          copyright_x_offset
+va_org      0x42CE7D
+push        copyright_text
+va_org      0x42CE90
+dd          copyright_x_offset
+
 ; Patch: Modify the colour of GM's names.
 va_org      0x44A325
 dd          gm_name_color
@@ -84,5 +98,7 @@ va_section  .teos
 %include    "asm/antifreeze.asm"
 %include    "asm/summon.asm"
 %include    "asm/names.asm"
+%include    "asm/copyright.asm"
+
 ; Append the rest of the data
 va_org      end

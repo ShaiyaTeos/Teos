@@ -31,6 +31,9 @@ get_window_title:
     call sprintf
     add esp, 12
 
+    ; Generate the copyright footer
+    call generate_copyright_text
+
     ; Create the window
     push window_title
     push window_class_name
