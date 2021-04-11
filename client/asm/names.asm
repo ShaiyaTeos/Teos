@@ -1,0 +1,1 @@
+gm_name_color   equ 0xFF24DFDF  ; The colour to display a GM's name.

@@ -30,6 +30,10 @@ jmp         short 0x40B9AD
 va_org      0x40BCEB
 jmp         0x40BDBC
 
+; Patch: Modify the colour of GM's names.
+va_org      0x44A325
+dd          gm_name_color
+
 ; Patch: Update the window title when the user selects a character
 va_org      0x46F890
 jmp         update_window_title_char_name
@@ -79,6 +83,6 @@ va_section  .teos
 %include    "asm/statpoints.asm"
 %include    "asm/antifreeze.asm"
 %include    "asm/summon.asm"
-
+%include    "asm/names.asm"
 ; Append the rest of the data
 va_org      end

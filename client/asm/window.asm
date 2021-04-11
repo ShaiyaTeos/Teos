@@ -1,7 +1,7 @@
 sprintf                     equ 0x5FED7B    ; The C-function for formatting a string.
 get_window_retn             equ 0x408207    ; The address to return to, for creating the window.
 window_handle               equ 0x771EB8    ; The address of the window handle.
-char_name_addr              equ 0x8C1260    ; The address where the current character name is stored.
+char_name_addr              equ 0x8C1260    ; The address where the current character name is stored. This is drawn in the info panel.
 set_window_text             equ 0x70047C    ; The C-function for setting the window text.
 char_write_player_name      equ 0x4DB050    ; Writes the player's name for the info panel.
 char_write_player_name_retn equ 0x46F895    ; The address to return to after updating the window title.
