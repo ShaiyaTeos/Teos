@@ -1,6 +1,7 @@
 use crate::models::{SNode, RtCriticalSection, CUser, CItem};
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CExchange {
     pub state: u32,
     pub user: *const CUser,
@@ -10,6 +11,7 @@ pub struct CExchange {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CExchangePvp {
     pub exchange: CExchange,
     pub money_pvp: u32,
@@ -17,6 +19,7 @@ pub struct CExchangePvp {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct ExchangeItem {
     pub bag: u8,
     pub slot: u8,
@@ -24,6 +27,7 @@ pub struct ExchangeItem {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CSyncExchange {
     pub node: SNode,
     pub critical_section: RtCriticalSection,

@@ -1,6 +1,7 @@
 use crate::models::CUser;
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CMinigame {
     pub status: u32,
     pub npc: u32,

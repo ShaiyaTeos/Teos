@@ -1,4 +1,5 @@
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CUserCrypto {
     aes_dec: SAes,
     aes_enc: SAes,
@@ -8,6 +9,7 @@ pub struct CUserCrypto {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct SAes {
     key: AesKey,
     iv: [u8; 16],
@@ -16,6 +18,7 @@ pub struct SAes {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct AesKey {
     pub key: [u32; 60],
     pub round: u32

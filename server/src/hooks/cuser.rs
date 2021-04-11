@@ -16,15 +16,16 @@ const MAXIMUM_PACKET_SIZE: usize = 2046;
 /// * `user`    - The character instance.
 pub extern "stdcall" fn on_user_set_attack(user: *mut CUser) {
     let char = unsafe { user.as_ref().unwrap() };
+    let info = &char.info;
     let mut additional_stats = CharacterAdditionalStats::new();
 
     // The "yellow stats" are equal to the total stat, less the base stat.
-    additional_stats.yellow_strength = 1;
-    additional_stats.yellow_dexterity = 2;
-    additional_stats.yellow_reaction = 3;
-    additional_stats.yellow_intelligence = 4;
-    additional_stats.yellow_wisdom = 5;
-    additional_stats.yellow_luck = 6;
+    additional_stats.yellow_strength = char.strength - info.base_str as u32;
+    additional_stats.yellow_dexterity = char.dexterity - info.base_dex as u32;
+    additional_stats.yellow_reaction = char.reaction - info.base_rec as u32;
+    additional_stats.yellow_intelligence = char.intelligence - info.base_int as u32;
+    additional_stats.yellow_wisdom = char.wisdom - info.base_wis as u32;
+    additional_stats.yellow_luck = char.luck - info.base_luc as u32;
 
     additional_stats.min_physical_attack = 123;
     additional_stats.max_physical_attack = 456;
@@ -43,15 +44,32 @@ pub extern "stdcall" fn send_user_details(user: *mut CUser) {
     let char = unsafe { user.as_ref().unwrap() };
     let mut packet = CharacterDetails::new();
     let pos = &char.connection.object.pos;
+    let info = &char.info;
+
+    // HP, MP, SP
+    packet.max_hitpoints = info.max_hp;
+    packet.max_stamina = info.max_sp;
+    packet.max_mana = info.max_mp;
+
+    // Money
+    packet.gold = info.money;
 
     // Stat and skillpoints
     packet.statpoints = char.info.stat_points;
     packet.skillpoints = char.info.skill_points;
 
+    // Kills, deaths etc
+    packet.kills = info.kills;
+    packet.deaths = info.deaths;
+    packet.victories = info.victories;
+    packet.defeats = info.defeats;
+
     // Position vector
     packet.x = pos.x;
     packet.y = pos.y;
     packet.z = pos.z;
+    packet.direction = info.direction;
+
     char.send(&packet);
 }
 
@@ -77,9 +95,7 @@ pub extern "stdcall" fn send_summon_request(user: *mut CUser, target: *mut CUser
 pub extern "stdcall" fn on_user_connect(user: *mut CUser) {
     let char = unsafe { user.as_ref().unwrap() };
     let mut teos = TEOS.lock().unwrap();
-
-    let name_offset = &char.username as *const _;
-    teos.log(format!("The username: {}, billing_id: {}, status: {}, name_addr: {:#X}", char.username.as_string(), char.billing_id, char.user_permission, name_offset as usize));
+    teos.log(format!("user={:#?}", char));
 }
 
 /// Gets executed when the server receives a packet from the user. If this function returns

@@ -4,10 +4,11 @@ use crate::util::types::FixedLengthArray;
 /// Represents the CUser player structure in the Shaiya server. We should aim to refactor these field
 /// names to be a bit more legible - for now they mirror that of the Ep4 PDB.
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct CUser {
     pub connection: CObjectConnection,
     pub info: StUserInfo,
-    missing: [u8; 129], // `StUserInfo` doesn't seem to be correct.
+    missing: [u8; 128], // `StUserInfo` doesn't seem to be correct.
     pub strength: u32,
     pub dexterity: u32,
     pub intelligence: u32,
@@ -156,6 +157,7 @@ pub struct CUser {
 unsafe impl Sync for CUser {}
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StHpAbility {
     pub apply: bool,
     pub id: u16,
@@ -164,6 +166,7 @@ pub struct StHpAbility {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StAttackAdd {
     pub attack_add: u32,
     pub attack: u32,
@@ -172,6 +175,7 @@ pub struct StAttackAdd {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StAttack {
     pub disable: u32,
     pub block: u32,
@@ -187,12 +191,14 @@ pub struct StAttack {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StCloneUser {
     pub node: SNode,
     pub death: u8,
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StUserMoveCheck {
     back_time: u32,
     check_time: u32,
@@ -237,7 +243,7 @@ pub struct StUserInfo {
     pub vg: u16,
     pub cg: u8,
     pub og: u8,
-    pub ig: u8,
+    pub ig: u16,
     pub base_str: u16,
     pub base_dex: u16,
     pub base_int: u16,
@@ -264,6 +270,7 @@ pub struct StUserInfo {
 }
 
 #[repr(C, packed)]
+#[derive(Debug)]
 pub struct StAdminInfo {
     process_id: u32,
     send_to_user_id: u32,
