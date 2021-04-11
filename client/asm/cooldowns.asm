@@ -1,0 +1,1 @@
+cooldown_colour equ 0xF0000000  ; The colour of the cooldown dial.

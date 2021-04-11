@@ -56,6 +56,10 @@ jmp         update_window_title_char_name
 va_org      0x4A8E52
 je          0x4A8F02
 
+; Patch: Modify the colour of the cooldown dial.
+va_org      0x4AA02C
+dd          cooldown_colour
+
 ; Patch: Modify the loading screen delay
 va_org      0x4C1D11
 dd          loading_screen_delay
@@ -108,6 +112,7 @@ va_section  .teos
 %include    "asm/names.asm"
 %include    "asm/copyright.asm"
 %include    "asm/loading.asm"
+%include    "asm/cooldowns.asm"
 
 ; Append the rest of the data
 va_org      end
