@@ -112,7 +112,7 @@ pub extern "stdcall" fn on_user_recv_packet(user: *mut CUser, packet: *mut u8) -
         let opcode = LittleEndian::read_u16(payload);
         let mut teos = TEOS.lock().unwrap();
         teos.log(format!("recv opcode {:#X}", opcode));
-        if opcode == 0x030A || opcode == 0x0309 {
+        if opcode == 0x030A || opcode == 0x0309 || opcode == 0x0308 {
             return true;
         }
     }

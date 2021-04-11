@@ -29,7 +29,7 @@ va_org      0x454553
 jmp         cuser_set_attack_end
 
 ; Patch: Call our custom function when a user sends a packet.
-va_org      0x466DCB
+va_org      0x466ECE
 jmp         cuser_packet_recv
 
 ; Patch: Call our custom SendCharacterList function.

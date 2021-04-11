@@ -4,7 +4,7 @@ cuser_return                    equ 0x40AA72
 cuser_enter_world_retn          equ 0x44A838
 cuser_status_offset             equ 0x5768
 cuser_max_admin_status          equ 10
-cuser_packet_retn               equ 0x466DD6
+cuser_packet_retn               equ 0x466ED3
 cuser_bad_handshake             equ 0x466E62
 cuser_char_list_retn            equ 0x46D726
 cuser_enable_char_select_offset equ 0x57C0
@@ -57,6 +57,9 @@ cuser_enter_world:
 
 ; Gets executed when a packet is received from a player.
 cuser_packet_recv:
+    ; Preserve eax
+    push eax
+
     ; Call the library function.
     push esi
     push edi
@@ -64,13 +67,12 @@ cuser_packet_recv:
 
     ; If the library returned true, we should no longer handle the packet.
     test al,al
+    pop eax
     jne cuser_packet_recv_cancel
 
-    ; If the first packet isn't a handshake, close the connection.
-    cmp word [esi], 0xA301
-    jne cuser_bad_handshake
-
     ; Continue processing the packet as normal
+    cmp eax, 0x01
+    jne 0x466F01
     jmp cuser_packet_retn
 
 ; Discontinue the processing of a packet (return early)
