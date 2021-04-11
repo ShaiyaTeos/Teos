@@ -56,9 +56,17 @@ jmp         update_window_title_char_name
 va_org      0x4A8E52
 je          0x4A8F02
 
+; Patch: Format the text for the cooldown.
+va_org      0x4A9FCB
+jmp         prepare_cooldown_text
+
 ; Patch: Modify the colour of the cooldown dial.
 va_org      0x4AA02C
 dd          cooldown_colour
+
+; Patch: Draw text for the cooldown.
+va_org      0x4AA088
+jmp         draw_cooldown_text
 
 ; Patch: Modify the loading screen delay
 va_org      0x4C1D11
