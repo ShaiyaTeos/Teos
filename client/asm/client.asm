@@ -52,6 +52,10 @@ dd          gm_name_color
 va_org      0x46F890
 jmp         update_window_title_char_name
 
+; Patch: Modify the loading screen delay
+va_org      0x4C1D11
+dd          loading_screen_delay
+
 ; Patch: Display map images for dungeons
 va_org      0x4C8827
 je          short 0x4C8837  ; By using "je short" we can guarantee it's a relative jump, as this should occupy only 2 bytes.
@@ -99,6 +103,7 @@ va_section  .teos
 %include    "asm/summon.asm"
 %include    "asm/names.asm"
 %include    "asm/copyright.asm"
+%include    "asm/loading.asm"
 
 ; Append the rest of the data
 va_org      end
