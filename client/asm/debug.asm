@@ -26,5 +26,4 @@ format_debug_info:
     push eax
     call sprintf
     add esp, 8
-
     jmp debug_retn

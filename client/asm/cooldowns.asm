@@ -43,7 +43,6 @@ prepare_cooldown_text:
 
 ; Draw the text for the cooldown of an item or skill
 draw_cooldown_text:
-
     ; Draw the text
     push cooldown_text
     push 0x00   ; Alpha
@@ -51,15 +50,36 @@ draw_cooldown_text:
     push 0xEC   ; G
     push 0xFF   ; R
 
-    ; Load the position of the item from the stack, and offset it slightly.
-    mov eax, dword [esp+160]    ; Y
-    add eax, 6                  ; Move the text down by 6 pixels.
+    ; If either the Y or the X coordinates seem out of bounds, we should treat it as an inventory
+    ; render. This isn't the correct way to do this and I'm sure there's a better way, but for now this is required
+    ; as the stack sizes and positions are different depending on where the cooldown should be rendered.
+    cmp dword [esp+112], 5000
+    jge _get_cooldown_offset_inventory
+    cmp dword [esp+20], 5000
+    jge _get_cooldown_offset_inventory
+
+    ; Load the skill positions
+    mov eax, dword [esp+112]    ; Y
+    add eax, 6
     push eax
-    mov eax, dword [esp+96]     ; X
-    add eax, 6                  ; Move the text 6 pixels to the right.
+    mov eax, dword [esp+24]     ; X
+    add eax, 6
     push eax
 
     ; Draw the text
+    jmp _draw_cooldown_text
+
+; Get the offsets for the inventory
+_get_cooldown_offset_inventory:
+    mov eax, dword [esp+160]    ; Y
+    add eax, 6                  ; Move the text down by 6 pixels.
+    push eax
+    mov eax, dword [esp+120]    ; X
+    add eax, 6                  ; Move the text 6 pixels to the right.
+    push eax
+
+; Draw the text
+_draw_cooldown_text:
     push text_client
     call draw_text
     add esp, 32
