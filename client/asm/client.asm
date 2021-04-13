@@ -44,6 +44,12 @@ push        copyright_text
 va_org      0x42CE90
 dd          copyright_x_offset
 
+; Patch: Use a custom camera limit
+va_org      0x439C64
+db          0xEB            ; Change the JE to a JMP
+va_org      0x439C70
+dd          camera_limit    ; The maximum camera limit.
+
 ; Patch: Modify the colour of GM's names.
 va_org      0x44A325
 dd          gm_name_color
@@ -127,6 +133,7 @@ va_section  .teos
 %include    "asm/cooldowns.asm"
 %include    "asm/debug.asm"
 %include    "asm/player.asm"
+%include    "asm/camlimit.asm"
 
 ; Append the rest of the data
 va_org      end
