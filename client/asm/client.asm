@@ -34,6 +34,10 @@ jmp         short 0x40B9AD
 va_org      0x40BCEB
 jmp         0x40BDBC
 
+; Patch: Toggle effects on or off depending on the config flag.
+va_org      0x40D6B5
+jmp         toggle_effects
+
 ; Patch: Update the copyright logo
 va_org      0x42CB3A
 push        copyright_logo
@@ -143,6 +147,7 @@ va_section  .teos
 %include    "asm/player.asm"
 %include    "asm/camlimit.asm"
 %include    "asm/settings.asm"
+%include    "asm/effects.asm"
 
 ; Append the rest of the data
 va_org      end
