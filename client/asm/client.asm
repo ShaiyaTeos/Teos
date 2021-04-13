@@ -66,6 +66,10 @@ dd          gm_name_color
 va_org      0x46F890
 jmp         update_window_title_char_name
 
+; Patch: Add support for custom client commands.
+va_org      0x475747
+jmp         parse_custom_commands
+
 ; Patch: Apply the shadow on the item stack quantity to all item types.
 va_org      0x4A8E52
 je          0x4A8F02
@@ -148,6 +152,8 @@ va_section  .teos
 %include    "asm/camlimit.asm"
 %include    "asm/settings.asm"
 %include    "asm/effects.asm"
+%include    "asm/commands.asm"
+%include    "asm/util.asm"
 
 ; Append the rest of the data
 va_org      end
