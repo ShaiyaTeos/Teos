@@ -67,8 +67,12 @@ va_org      0x46F890
 jmp         update_window_title_char_name
 
 ; Patch: Add support for custom client commands.
-va_org      0x475747
+va_org      0x47546E
 jmp         parse_custom_commands
+
+; Patch: Allow all users to use commands.
+va_org      0x47D603
+times       6 nop
 
 ; Patch: Apply the shadow on the item stack quantity to all item types.
 va_org      0x4A8E52
