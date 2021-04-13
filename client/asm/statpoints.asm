@@ -2,13 +2,28 @@ statpoint_alloc_qty     equ 10          ; The number of statpoints to allocate w
 statpoint_alloc_retn    equ 0x510188    ; The address to return to after adjusting the statpoint allocation.
 get_async_key_state     equ 0x700504    ; The function for checking the state of a key.
 vk_shift                equ 0x10        ; The shift key.
+vk_ctrl                 equ 0x11        ; The ctrl key.
 
 ; The function to be executed when allocating statpoints.
 allocate_stat_points:
     ; Preserve eax (will store our key state)
+    push edx
     push eax
     push ecx
 
+    ; Get the state of the control key.
+    push vk_ctrl
+    call dword [get_async_key_state]
+    and eax, 0xFF00
+    je check_shift_state
+    pop ecx
+    pop eax
+
+    ; If ctrl is held down, we should set edx to contain the number of remaining statpoints.
+    mov edx, ecx
+    jmp alloc_statpoints
+
+check_shift_state:
     ; Get the state of the shift key.
     push vk_shift
     call dword [get_async_key_state]
@@ -20,7 +35,6 @@ allocate_stat_points:
     je allocate_stat_points_original
 
     ; Store the amount of statpoints to allocate in edx
-    push edx
     cmp ecx, statpoint_alloc_qty
     jge alloc_qty
     mov edx, ecx                    ; If `statpoint_alloc_qty` is greater than the available statpoints, just use that instead.
@@ -36,6 +50,7 @@ alloc_statpoints:
 
 ; The function for allocating statpoints using the default method (1 at a time).
 allocate_stat_points_original:
+    pop edx
     dec ecx
     mov [esi+0x4C], ecx
     inc word [esi+eax*2+64]
