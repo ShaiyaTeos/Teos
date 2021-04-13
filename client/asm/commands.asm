@@ -29,6 +29,9 @@ parse_custom_commands:
 
     ; Set effects to "on"
     mov byte [is_effects_enabled], 1
+    call save_config
+
+    ; Write a message to the chat box
     push effect_on_success_message
     push effect_code_white
     call write_client_chat_text
@@ -46,6 +49,9 @@ parse_effect_off_cmd:
 
     ; Set effects to "off"
     mov byte [is_effects_enabled], 0
+    call save_config
+
+    ; Write a message to the chat box
     push effect_off_success_message
     push effect_code_white
     call write_client_chat_text

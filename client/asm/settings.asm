@@ -6,6 +6,9 @@ save_graphic_exit   equ 0x50367C    ; The address to return to after saving the 
 config_buffer_size  equ 260         ; The size of the config value buffer.
 config_default      equ 0x700B64    ; The default load value.
 load_graphic_exit   equ 0x406950    ; The address to return to after loading the custom graphic options.
+save_config_file    equ 0x502B70    ; The function for saving the config file.
+load_config_file    equ 0x405FE0    ; The function for loading the config file.
+write_profile_str   equ 0x7002C0    ; The function for writing to a cfg file.
 
 ; If effects are enabled
 is_effects_enabled:
@@ -15,8 +18,38 @@ is_effects_enabled:
 effects_key:
     db "EFFECTS", 0
 
+; Wrapper function to save custom config state.
+save_config:
+    push ebp
+    mov ebp, esp
+    push ecx
+
+    ; Save custom options
+    push 6
+    mov ecx, config_file
+    call save_config_file
+    add esp, 4
+
+    pop ecx
+    mov esp, ebp
+    pop ebp
+    retn
+
+; Save our custom config.
+save_custom_config:
+    cmp eax, 5
+    jne save_config_default
+    call save_graphic_options
+save_config_default:
+    cmp eax, 4
+    ja  0x50367D
+    jmp 0x502BAC
+
 ; Save our custom graphic options.
 save_graphic_options:
+    push ebp
+    mov ebp, esp
+
     ; Save the effects enabled option.
     push config_file
     cmp byte [is_effects_enabled], 0
@@ -28,11 +61,11 @@ effects_disabled:
 save_effects_option:
     push effects_key
     push config_const_video
-    call esi
+    call dword [write_profile_str]
 
-    ; Exit the save graphic options
-    cmp dword [0x771938], 0
-    jmp save_graphic_exit
+    mov esp, ebp
+    pop ebp
+    retn
 
 ; Load our custom graphic options.
 load_graphic_options:

@@ -103,9 +103,9 @@ va_org      0x4D0185
 jmp         adjust_clock_text
 nop
 
-; Patch: Save custom graphic options.
-va_org      0x503023
-jmp         save_graphic_options
+; Patch: Save custom config options.
+va_org      0x502BA3
+jmp         save_custom_config
 
 ; Patch: Adjust the amount of statpoints that are allocated.
 va_org      0x51017F
