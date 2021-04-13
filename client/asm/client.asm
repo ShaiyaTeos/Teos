@@ -7,6 +7,10 @@ dd      new_size_rdata
 
 ; =========================================================================================================
 va_section  .text
+; Patch: Load custom graphic options
+va_org      0x40694B
+jmp         load_graphic_options
+
 ; Patch: Always flag the window as focused.
 va_org      0x407958
 jmp         flag_window_focused
@@ -91,6 +95,10 @@ va_org      0x4D0185
 jmp         adjust_clock_text
 nop
 
+; Patch: Save custom graphic options.
+va_org      0x503023
+jmp         save_graphic_options
+
 ; Patch: Adjust the amount of statpoints that are allocated.
 va_org      0x51017F
 jmp         allocate_stat_points
@@ -134,6 +142,7 @@ va_section  .teos
 %include    "asm/debug.asm"
 %include    "asm/player.asm"
 %include    "asm/camlimit.asm"
+%include    "asm/settings.asm"
 
 ; Append the rest of the data
 va_org      end
