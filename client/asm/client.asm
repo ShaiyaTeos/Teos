@@ -115,6 +115,10 @@ jmp         save_custom_config
 va_org      0x51017F
 jmp         allocate_stat_points
 
+; Patch: Adjust the GM name colour for the target frame.
+va_org      0x519F27
+dd          gm_name_color
+
 ; Patch: Add the destination map to the summon dialogue box.
 va_org      0x5361BF
 jmp         write_summon_destination
