@@ -78,3 +78,42 @@ exit_with_message:
     mov esp, ebp
     pop ebp
     retn 4
+
+; Compares two strings.
+;
+; Usage:
+; push first_string
+; push second_string
+; call string_compare
+string_compare:
+    push ebp
+    mov ebp, esp
+
+    push edi
+    push esi
+    push ecx
+    xor eax, eax
+
+    mov edi, [ebp + 8]
+    mov esi, [ebp + 12]
+
+    ; Loop through and compare the strings.
+string_compare_loop:
+    mov cl, byte [edi+eax]
+    test cl, cl
+    je string_compare_exit  ; Exit if we've reached a null terminator.
+    cmp byte [esi+eax], cl
+    jne string_compare_fail ; Exit if the bytes aren't equal.
+    inc eax
+    jmp string_compare_loop  ; Re-nter the loop if the bytes are equal.
+string_compare_fail:
+    xor eax, eax
+
+    ; Clean up the stack
+string_compare_exit:
+    pop ecx
+    pop esi
+    pop edi
+    mov esp, ebp
+    pop ebp
+    retn 8
