@@ -38,6 +38,10 @@ jmp         0x40BDBC
 va_org      0x40D6B5
 jmp         toggle_effects
 
+; Patch: Run startup code before rendering login screen.
+va_org      0x42CA40
+jmp         startup
+
 ; Patch: Update the copyright logo
 va_org      0x42CB3A
 push        copyright_logo
@@ -93,10 +97,6 @@ jmp         draw_cooldown_text
 ; Patch: Modify the loading screen delay
 va_org      0x4C1D11
 dd          loading_screen_delay
-
-; Patch: Run startup code before rendering login screen.
-va_org      0x4C3F55
-jmp         startup
 
 ; Patch: Display map images for dungeons
 va_org      0x4C8827
