@@ -18,6 +18,14 @@ is_effects_enabled:
 effects_key:
     db "EFFECTS", 0
 
+; If costumes are enabled
+is_costumes_enabled:
+    db  01
+
+; The costumes key.
+costumes_key:
+    db "COSTUMES", 0
+
 ; Wrapper function to save custom config state.
 save_config:
     push ebp
@@ -63,6 +71,19 @@ save_effects_option:
     push config_const_video
     call dword [write_profile_str]
 
+    ; Save the costumes enabled option.
+    push config_file
+    cmp byte [is_costumes_enabled], 0
+    je costumes_disabled
+    push config_const_true
+    jmp save_costumes_option
+costumes_disabled:
+    push config_const_false
+save_costumes_option:
+    push costumes_key
+    push config_const_video
+    call dword [write_profile_str]
+
     mov esp, ebp
     pop ebp
     retn
@@ -79,6 +100,28 @@ load_graphic_options:
     push config_const_video
     call esi
     test eax, eax
+    je load_costumes_option
+
+    ; Load the return value into eax and compare it against false
+    mov ecx, config_const_false
+    lea eax, [esp + 0x10]
+    mov dl, [eax]
+    cmp dl, [ecx]
+    jne load_costumes_option
+
+    ; The "effects" key is false.
+    mov byte [is_effects_enabled], 0
+load_costumes_option:
+    ; Load the "costumes" option.
+    push config_file
+    push config_buffer_size
+    lea edx, [esp + 0x18]   ; Push the buffer for the returned string.
+    push edx
+    push config_default
+    push costumes_key
+    push config_const_video
+    call esi
+    test eax, eax
     je exit_graphic_options
 
     ; Load the return value into eax and compare it against false
@@ -88,9 +131,8 @@ load_graphic_options:
     cmp dl, [ecx]
     jne exit_graphic_options
 
-    ; The "effects" key is false.
-    mov byte [is_effects_enabled], 0
-
+    ; The "costumes" key is false.
+    mov byte [is_costumes_enabled], 0
 exit_graphic_options:
     push config_file
     jmp load_graphic_exit
