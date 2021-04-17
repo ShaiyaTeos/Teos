@@ -1,10 +1,22 @@
 startup_retn    equ 0x42CA47    ; The address to return to after running the startup calls.
 
+; The flag for running startup code.
+startup_flag:
+    db  0
+
 ; Runs startup function calls after the window has been generated.
 startup:
+    ; Skip the startup code if it's already been executed.
+    cmp byte [startup_flag], 1
+    je startup_exit
+
+    ; Mark the startup as completed.
+    mov byte [startup_flag], 1
+
     ; Load the costume definitions.
     call load_costume_definitions
 
+startup_exit:
     ; Render the login screen.
     push -1
     push 0x6EBC20
