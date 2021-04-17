@@ -13,7 +13,7 @@ load_costume_definitions:
 
     ; Load the definition file.
     push costumes_definitions_file
-    call read_file
+    call read_sdata_file
     test eax, eax
     je costumes_not_found
     jmp costumes_exit
