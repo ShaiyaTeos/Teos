@@ -1,4 +1,7 @@
 write_text              equ 0x41F1D0    ; The function to write text to the chat box.
+error_message           equ 0x7023CC    ; The text for an error message box.
+message_box_a           equ 0x700428    ; The address where USER32.MessageBoxA is stored.
+post_message_a          equ 0x70042C    ; The address where USER32.PostMessageA is stored.
 effect_code_white       equ 0           ; The effect code for white text.
 effect_code_top_orange  equ 13          ; The effect code for writing orange text to the top chat box.
 effect_code_top_red     equ 14          ; The effect code for writing red text to the top chat box.
@@ -45,3 +48,33 @@ write_client_chat_text:
     mov esp, ebp
     pop ebp
     retn 8
+
+; Exits the process with a message box.
+;
+; Usage:
+; push message
+; call exit_with_message
+exit_with_message:
+    push ebp
+    mov ebp, esp    ; Stdcall
+
+    mov ecx, [ebp + 8]  ; Message
+
+    ; Display the message box.
+    push 0x00000010  ; Error message style
+    push error_message
+    push ecx
+    push 0  ; HWND
+    call dword [message_box_a]
+
+    ; Close the window.
+    mov edx, dword [window_handle]
+    push 0
+    push 0
+    push 0x10   ; WM_Close
+    push edx
+    call dword [post_message_a]
+
+    mov esp, ebp
+    pop ebp
+    retn 4

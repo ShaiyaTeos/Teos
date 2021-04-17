@@ -94,6 +94,10 @@ jmp         draw_cooldown_text
 va_org      0x4C1D11
 dd          loading_screen_delay
 
+; Patch: Run startup code before rendering login screen.
+va_org      0x4C3F55
+jmp         startup
+
 ; Patch: Display map images for dungeons
 va_org      0x4C8827
 je          short 0x4C8837  ; By using "je short" we can guarantee it's a relative jump, as this should occupy only 2 bytes.
@@ -162,6 +166,9 @@ va_section  .teos
 %include    "asm/effects.asm"
 %include    "asm/commands.asm"
 %include    "asm/util.asm"
+%include    "asm/file.asm"
+%include    "asm/costumes.asm"
+%include    "asm/startup.asm"
 
 ; Append the rest of the data
 va_org      end
