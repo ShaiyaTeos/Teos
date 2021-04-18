@@ -1,7 +1,6 @@
 item_container_size     equ 0x3C0       ; The number of bytes for each container page.
 item_data_size          equ 0x28        ; The number of bytes for each item.
 item_container_start    equ 0x8BEB7D    ; The start of the player's items.
-init_inventory_pos_retn equ 0x4FEEFC    ; The address to return to after initialising inventory positions.
 
 ; Represents an item.
 struc CItem
@@ -17,6 +16,11 @@ endstruc
 
 ; The total number of equipment slots.
 num_equipment_slots equ 14
+
+; The position of the player's gold.
+inventory_gold_position:
+    .x: dd  230.00
+    .y: dd  485.00
 
 ; The positions of each equipment slot.
 equipment_slot_positions:
@@ -63,20 +67,27 @@ equipment_slot_positions:
         dd 199.00   ; X
         dd 61.00    ; Y
 
-; The function which initialises the slot positions.
-initialise_equipment_slot_positions:
+; A function which initialises the position of various inventory related data.
+initialise_inventory_positions:
     %assign total_bytes     (num_equipment_slots * 8)
     %assign dword_passes    (total_bytes / 4)
     %assign current_byte    0
 
-    ; Copy full dwords at a time.
+    ; Copy full dwords at a time for the equipment.
     %rep dword_passes
         mov edi, dword [equipment_slot_positions + current_byte]
         mov dword [eax + current_byte + 1880], edi
         %assign current_byte    current_byte + 4
     %endrep
 
+    ; Assign the position of the player's gold.
+    mov edi, dword [inventory_gold_position.x]
+    mov dword [eax + 2032], edi
+    mov edi, dword [inventory_gold_position.y]
+    mov dword [eax + 2036], edi
+
     ; Exit the function.
     pop edi
-    fstp dword [esp + 8]
-    jmp init_inventory_pos_retn
+    pop esi
+    add esp, 128
+    retn

@@ -111,9 +111,9 @@ va_org      0x4D0185
 jmp         adjust_clock_text
 nop
 
-; Patch: Update the equipment slot positions.
+; Patch: Update the inventory positions.
 va_org      0x4FEEF7
-jmp         initialise_equipment_slot_positions
+jmp         initialise_inventory_positions
 
 ; Patch: Save custom config options.
 va_org      0x502BA3
