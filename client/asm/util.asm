@@ -2,6 +2,9 @@ write_text              equ 0x41F1D0    ; The function to write text to the chat
 error_message           equ 0x7023CC    ; The text for an error message box.
 message_box_a           equ 0x700428    ; The address where USER32.MessageBoxA is stored.
 post_message_a          equ 0x70042C    ; The address where USER32.PostMessageA is stored.
+operator_new            equ 0x5FF93E    ; The function for allocating memory using C++'s operator new.
+operator_delete         equ 0x5FD99A    ; The function for deleting memory using C++'s operator delete.
+memset                  equ 0x5FEB80    ; The C function for setting a block of memory to a value.
 effect_code_white       equ 0           ; The effect code for white text.
 effect_code_top_orange  equ 13          ; The effect code for writing orange text to the top chat box.
 effect_code_top_red     equ 14          ; The effect code for writing red text to the top chat box.

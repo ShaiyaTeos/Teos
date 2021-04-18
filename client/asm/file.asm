@@ -1,5 +1,16 @@
 saf_read_file   equ 0x40C900    ; The function for reading a file from the data file.
 read_buffer     equ 0x59EB00    ; The function for reading from a buffer.
+file_data       equ 0x7722F8    ; A pointer to the most recently opened file.
+seed_decrypt    equ 0x5DC2E0    ; The function for decrypting SData buffers using KISA's SEED algorithm.
+seed_key        equ 0x7647C8    ; The SEED key array (128 bytes).
+
+; The header for an encrypted file.
+struc SData
+    .signature: resb    40
+    .checksum:  resd    1
+    .length:    resd    2
+    .padding:   resb    12
+endstruc
 
 ; The encryption key for reading sdata files.
 sdata_key:
@@ -11,7 +22,11 @@ read_file_flag:
 
 ; The destination buffer for the file header.
 header_buf:
-    times   41  db  0
+    times   SData_size  db  0
+
+; The length of the data.
+data_length:
+    dd  0
 
 ; Read a file from the data file.
 read_file:
@@ -56,11 +71,69 @@ read_sdata_file:
     test al, al
     je read_sdata_unencrypted  ; No further action needed - file is not encrypted.
 
-
-read_sdata_unencrypted: ; Open the encrypted file.
+    ; Load the file
     mov eax, [ebp + 8]
     push eax
     call read_file
+    test eax, eax
+    je read_sdata_exit
+
+    ; Load the file pointer into ESI.
+    push esi
+    mov esi, eax
+
+    ; Read the file header.
+    push esi
+    push SData_size
+    push 1
+    push header_buf
+    call read_buffer
+    add esp, 16
+
+    ; Allocate a block of memory to read the data into.
+    push ebx
+    mov ebx, dword [header_buf + SData.length]
+    push edi
+    push ebx
+    call operator_new
+    add esp, 4
+    mov edi, eax
+
+    ; Zero out the memory region.
+    push ebx
+    push 0
+    push edi
+    call memset
+    add esp, 12
+
+    ; Read the file data.
+    push esi
+    push ebx
+    push 1
+    push edi
+    call read_buffer
+    add esp, 16
+
+    ; Decrypt the file data.
+    mov [data_length], ebx
+    push seed_key
+    push data_length
+    push edi
+    call seed_decrypt
+    add esp, 12
+
+    ; Move the address of the data into eax.
+    mov eax, edi
+    pop edi
+    pop ebx
+    pop esi
+    jmp read_sdata_exit
+
+read_sdata_unencrypted: ; Open the unencrypted file.
+    mov eax, [ebp + 8]
+    push eax
+    call read_file
+
 read_sdata_exit:
     mov esp, ebp
     pop ebp
