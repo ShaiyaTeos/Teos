@@ -115,6 +115,10 @@ nop
 va_org      0x4FEEF7
 jmp         initialise_inventory_positions
 
+; Patch: Render more equipment slots.
+va_org      0x50181B
+db          num_equipment_slots
+
 ; Patch: Save custom config options.
 va_org      0x502BA3
 jmp         save_custom_config
