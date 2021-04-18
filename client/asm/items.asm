@@ -76,11 +76,11 @@ equipment_slot_positions:
         dd 0.00     ; X
         dd 0.00     ; Y
     .left_artifact:
-        dd 20.00    ; X
+        dd 0.00     ; X
         dd 0.00     ; Y
     .right_artifact:
-        dd 110.00   ; X
-        dd 60.00    ; Y
+        dd 0.00     ; X
+        dd 0.00     ; Y
 
 ; A function which initialises the position of various inventory related data.
 initialise_inventory_positions:
