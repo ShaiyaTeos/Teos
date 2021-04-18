@@ -3,6 +3,14 @@ parse_command_retn  equ 0x475475    ; The address to return to after parsing cus
 command_success     equ 0x47B290    ; The return address for a successful command.
 command_exit        equ 0x47B292    ; The return address for exiting a command handle.
 
+; The scanned digit.
+scanned_cmd_digit:
+    dd  0
+
+; Formatted command output.
+command_output:
+    times   128 db  0
+
 ; The effect on command identifier
 effect_on_command:
     db "/effects on", 0
@@ -16,6 +24,13 @@ effect_off_command:
 effect_off_len equ $ - effect_off_command
 effect_off_success_message:
     db "Effects are now disabled.", 0
+
+; The animation command identifier
+play_anim_command:
+    db "/anim", 0
+anim_cmd_len equ ($ - play_anim_command) - 1
+anim_cmd_success_message:
+    db "Playing animation %d.", 0
 
 ; Parses custom command inputs.
 parse_custom_commands:
@@ -48,7 +63,7 @@ parse_effect_off_cmd:
     call strncmp
     add esp, 12
     test eax, eax
-    jne parse_command_exit
+    jne parse_play_anim_cmd
 
     ; Set effects to "off"
     mov byte [is_effects_enabled], 0
@@ -56,6 +71,67 @@ parse_effect_off_cmd:
 
     ; Write a message to the chat box
     push effect_off_success_message
+    push effect_code_white
+    call write_client_chat_text
+    jmp command_success
+
+parse_play_anim_cmd:
+    ; Check for /anim %d
+    push anim_cmd_len
+    push play_anim_command
+    push esi
+    call strncmp
+    add esp, 12
+    test eax, eax
+    jne parse_command_exit
+
+    ; Do nothing if the player isn't an admin.
+    mov al, byte [user_status]
+    test al, al
+    je player_exit
+
+    ; Get the player instance.
+    push ecx
+    mov ecx, client_base
+    mov eax, dword [player_id]
+    push eax
+    call get_player
+    pop ecx
+    test eax, eax
+    je parse_command_exit
+
+    ; Move the player into ECX.
+    mov ecx, eax
+
+    ; Get the animation id.
+    push ecx
+    push scanned_cmd_digit
+    push digit_format
+    add esi, (anim_cmd_len + 1)
+    push esi
+    call sscanf
+    add esp, 12
+    mov eax, dword [scanned_cmd_digit]
+    pop ecx
+
+    ; Lock the player in an animation state.
+    mov dword [ecx + 220], 2
+
+    ; Play the animation
+    push eax
+    push eax
+    call play_animation
+    pop eax
+
+    ; Format the chat message.
+    push eax
+    push anim_cmd_success_message
+    push command_output
+    call sprintf
+    add esp, 12
+
+    ; Write a message to the chat box
+    push command_output
     push effect_code_white
     call write_client_chat_text
     jmp command_success

@@ -5,6 +5,9 @@ post_message_a          equ 0x70042C    ; The address where USER32.PostMessageA 
 operator_new            equ 0x5FF93E    ; The function for allocating memory using C++'s operator new.
 operator_delete         equ 0x5FD99A    ; The function for deleting memory using C++'s operator delete.
 memset                  equ 0x5FEB80    ; The C function for setting a block of memory to a value.
+play_animation          equ 0x412B50    ; The function for playing an animation.
+digit_format            equ 0x702358    ; The formatter for a digit.
+sscanf                  equ 0x5FE47D    ; The C function for scanning from a string.
 effect_code_white       equ 0           ; The effect code for white text.
 effect_code_top_orange  equ 13          ; The effect code for writing orange text to the top chat box.
 effect_code_top_red     equ 14          ; The effect code for writing red text to the top chat box.
