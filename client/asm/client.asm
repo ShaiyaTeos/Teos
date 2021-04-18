@@ -111,6 +111,10 @@ va_org      0x4D0185
 jmp         adjust_clock_text
 nop
 
+; Patch: Update the equipment slot positions.
+va_org      0x4FEEF7
+jmp         initialise_equipment_slot_positions
+
 ; Patch: Save custom config options.
 va_org      0x502BA3
 jmp         save_custom_config
@@ -169,6 +173,7 @@ va_section  .teos
 %include    "asm/file.asm"
 %include    "asm/costumes.asm"
 %include    "asm/startup.asm"
+%include    "asm/items.asm"
 
 ; Append the rest of the data
 va_org      end
