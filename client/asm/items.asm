@@ -15,7 +15,7 @@ struc CItem
 endstruc
 
 ; The total number of equipment slots.
-num_equipment_slots equ 19  ; 19 is a hard limit without further modifications to the client.
+num_equipment_slots equ 19
 
 ; The position of the player's gold.
 inventory_gold_position:
@@ -25,53 +25,53 @@ inventory_gold_position:
 ; The positions of each equipment slot.
 equipment_slot_positions:
     .helmet:
-        dd 14.00    ; X (Original = 42.00)
-        dd 53.00    ; Y (Original = 61.00)
+        dd 16.00    ; X (Original = 42.00)
+        dd 62.00    ; Y (Original = 61.00)
     .top:
-        dd 14.00    ; X (Original = 29.00)
-        dd 93.00    ; Y (Original = 102.00)
+        dd 16.00    ; X (Original = 29.00)
+        dd 104.00    ; Y (Original = 102.00)
     .pants:
-        dd 14.00    ; X (Original = 16.00)
-        dd 133.00   ; Y (Original = 143.00)
+        dd 16.00    ; X (Original = 16.00)
+        dd 146.00   ; Y (Original = 143.00)
     .gloves:
-        dd 14.00    ; X (Original = 28.00)
-        dd 173.00   ; Y (Original = 184.00)
+        dd 16.00    ; X (Original = 28.00)
+        dd 188.00   ; Y (Original = 184.00)
     .boots:
-        dd 14.00    ; X (Original = 42.00)
-        dd 213.00   ; Y (Original = 225.00)
+        dd 16.00    ; X (Original = 42.00)
+        dd 230.00   ; Y (Original = 225.00)
     .weapon:
-        dd 210.00   ; X (Original = 209.00)
-        dd 133.00   ; Y (Original = 143.00)
+        dd 207.00   ; X (Original = 209.00)
+        dd 146.00   ; Y (Original = 143.00)
     .shield:
         dd 210.00   ; X (Original = 197.00)
         dd 173.00   ; Y (Original = 184.00)
     .cape:
-        dd 210.00   ; X (Original = 183.00)
-        dd 213.00   ; Y (Original = 225.00)
+        dd 207.00   ; X (Original = 183.00)
+        dd 229.00   ; Y (Original = 225.00)
     .amulet:
         dd 201.00   ; X (Original = 175.00)
-        dd 53.00    ; Y (Original = 61.00)
+        dd 61.00    ; Y (Original = 61.00)
     .left_ring:
-        dd 201.00   ; X (Original = 183.00)
-        dd 77.00    ; Y (Original = 86.00)
+        dd 200.00   ; X (Original = 183.00)
+        dd 86.00    ; Y (Original = 86.00)
     .right_ring:
-        dd 225.00   ; X (Original = 206.00)
-        dd 77.00    ; Y (Original = 86.00)
+        dd 224.00   ; X (Original = 206.00)
+        dd 86.00    ; Y (Original = 86.00)
     .left_loop:
-        dd 201.00   ; X (Original = 188.00)
-        dd 101.00   ; Y (Original = 111.00)
+        dd 200.00   ; X (Original = 188.00)
+        dd 111.00   ; Y (Original = 111.00)
     .right_loop:
-        dd 225.00   ; X (Original = 212.00)
-        dd 101.00   ; Y (Original = 111.00)
+        dd 224.00   ; X (Original = 212.00)
+        dd 111.00   ; Y (Original = 111.00)
     .mount:
-        dd 225.00   ; X (Original = 199.00)
-        dd 53.00    ; Y (Original = 61.00)
+        dd 224.00   ; X (Original = 199.00)
+        dd 61.00    ; Y (Original = 61.00)
     .costume:
-        dd 168.00   ; X
-        dd 213.00   ; Y
+        dd 167.00   ; X
+        dd 229.00   ; Y
     .weapon_skin:
         dd 168.00   ; X
-        dd 133.00   ; Y
+        dd 146.00   ; Y
     .pet:
         dd 0.00     ; X
         dd 0.00     ; Y
