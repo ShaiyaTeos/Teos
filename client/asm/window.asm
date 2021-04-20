@@ -6,6 +6,8 @@ set_window_text             equ 0x70047C    ; The C-function for setting the win
 char_write_player_name      equ 0x4DB050    ; Writes the player's name for the info panel.
 char_write_player_name_retn equ 0x46F895    ; The address to return to after updating the window title.
 reset_window_title_retn     equ 0x5B5076    ; The address to return to after resetting the window title in character screen.
+screen_width                equ 0x75D0D8    ; The address where the window width is stored.
+screen_height               equ 0x75D0DC    ; The address where the window height is stored.
 
 ; The window title format
 window_title_format:

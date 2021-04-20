@@ -102,6 +102,10 @@ jmp         draw_cooldown_text
 va_org      0x4C1D11
 dd          loading_screen_delay
 
+; Patch: Modify the player's buffs.
+va_org      0x4C66EE
+jmp         render_buffs
+
 ; Patch: Display map images for dungeons
 va_org      0x4C8827
 je          short 0x4C8837  ; By using "je short" we can guarantee it's a relative jump, as this should occupy only 2 bytes.
@@ -173,6 +177,7 @@ va_section  .teos
 %include    "asm/file.asm"
 %include    "asm/costumes.asm"
 %include    "asm/startup.asm"
+%include    "asm/buffs.asm"
 
 ; Append the rest of the data
 va_org      end
