@@ -35,8 +35,8 @@ va_org      0x40BCEB
 jmp         0x40BDBC
 
 ; Patch: Toggle effects on or off depending on the config flag.
-va_org      0x40D6B5
-jmp         toggle_effects
+va_org      0x416D60
+jmp         toggle_effects_secondary
 
 ; Patch: Run startup code before rendering login screen.
 va_org      0x42CA40
@@ -65,6 +65,10 @@ dd          camera_limit    ; The maximum camera limit.
 ; Patch: Modify the colour of GM's names.
 va_org      0x44A325
 dd          gm_name_color
+
+; Patch: Toggle effects on or off depending on the config flag.
+va_org      0x4508F0
+jmp         toggle_effects_primary
 
 ; Patch: Update the window title when the user selects a character
 va_org      0x46F890
