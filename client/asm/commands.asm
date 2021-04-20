@@ -4,7 +4,11 @@ command_success     equ 0x47B290    ; The return address for a successful comman
 command_exit        equ 0x47B292    ; The return address for exiting a command handle.
 
 ; The scanned digit.
-scanned_cmd_digit:
+primary_scanned_cmd_digit:
+    dd  0
+
+; The secondary scanned digit.
+secondary_scanned_cmd_digit:
     dd  0
 
 ; Formatted command output.
@@ -31,6 +35,13 @@ play_anim_command:
 anim_cmd_len equ ($ - play_anim_command) - 1
 anim_cmd_success_message:
     db "Playing animation %d.", 0
+
+; The graphics command identifier
+play_gfx_command:
+    db "/gfx", 0
+gfx_cmd_len equ ($ - play_gfx_command) - 1
+gfx_cmd_success_message:
+    db "Playing graphic effect %d (scene %d).", 0
 
 ; Parses custom command inputs.
 parse_custom_commands:
@@ -83,7 +94,7 @@ parse_play_anim_cmd:
     call strncmp
     add esp, 12
     test eax, eax
-    jne parse_command_exit
+    jne parse_play_gfx_cmd
 
     ; Do nothing if the player isn't an admin.
     mov al, byte [user_status]
@@ -105,13 +116,13 @@ parse_play_anim_cmd:
 
     ; Get the animation id.
     push ecx
-    push scanned_cmd_digit
+    push primary_scanned_cmd_digit
     push digit_format
     add esi, (anim_cmd_len + 1)
     push esi
     call sscanf
     add esp, 12
-    mov eax, dword [scanned_cmd_digit]
+    mov eax, dword [primary_scanned_cmd_digit]
     pop ecx
 
     ; Lock the player in an animation state.
@@ -129,6 +140,83 @@ parse_play_anim_cmd:
     push command_output
     call sprintf
     add esp, 12
+
+    ; Write a message to the chat box
+    push command_output
+    push effect_code_white
+    call write_client_chat_text
+    jmp command_success
+
+parse_play_gfx_cmd:
+    ; Check for /gfx %d %d
+    push gfx_cmd_len
+    push play_gfx_command
+    push esi
+    call strncmp
+    add esp, 12
+    test eax, eax
+    jne parse_command_exit
+
+    ; Do nothing if the player isn't an admin.
+    mov al, byte [user_status]
+    test al, al
+    je player_exit
+
+    ; Get the player instance.
+    push ecx
+    mov ecx, client_base
+    mov eax, dword [player_id]
+    push eax
+    call get_player
+    pop ecx
+    test eax, eax
+    je parse_command_exit
+
+    ; Move the player into ECX.
+    mov ecx, eax
+
+    ; Get the effect id.
+    push ecx
+    push secondary_scanned_cmd_digit
+    push primary_scanned_cmd_digit
+    push two_digit_format
+    add esi, (gfx_cmd_len + 1)
+    push esi
+    call sscanf
+    add esp, 16
+    pop ecx
+
+    ; Format the chat message.
+    mov eax, dword [secondary_scanned_cmd_digit]
+    push eax
+    mov eax, dword [primary_scanned_cmd_digit]
+    push eax
+    push gfx_cmd_success_message
+    push command_output
+    call sprintf
+    add esp, 16
+
+    ; Play the effect
+    mov eax, dword [player_ptr]
+    push 5
+
+    lea ecx, [eax + 0x28]
+    push ecx    ; Player's Z position.
+
+    lea ecx, [eax + 0x1C]
+    push ecx    ; Player's Y position.
+
+    add eax, 0x10
+    push eax    ; Player's X position.
+
+    mov eax, dword [secondary_scanned_cmd_digit]
+    push eax    ; Scene id.
+
+    mov eax, dword [primary_scanned_cmd_digit]
+    push eax    ; Effect id.
+
+    mov ecx, client_base
+    call play_graphical_effect
 
     ; Write a message to the chat box
     push command_output

@@ -32,6 +32,10 @@ effect_code_mts         equ 46          ; The effect code for writing text as a 
 effect_code_area        equ 47          ; The effect code for writing text with the blue colour from area chat.
 effect_code_pink_mts    equ 48          ; The effect code for writing text as a darker Message to Server.
 
+; The formatter for two digits
+two_digit_format:
+    db  "%d %d", 0
+
 ; Writes text to the player's chat box.
 ;
 ; Usage:
