@@ -1,5 +1,6 @@
-create_file_a   equ 0x7002EC    ; The Kernel32.CreateFileA function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea)
-write_file      equ 0x700244    ; The Kernel32.WriteFile function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+create_file_a           equ 0x7002EC    ; The Kernel32.CreateFileA function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea)
+write_file              equ 0x700244    ; The Kernel32.WriteFile function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+get_current_process_id  equ 0x700324    ; The Kernel32.GetCurrentProcessId function (https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
 
 ; File access constants.
 generic_read    equ 0x80000000
@@ -34,7 +35,19 @@ discord_application_id:
 
 ; The handshake JSON format.
 discord_handshake_format:
-    db "{'v': 1, 'client_id': %s}", 0
+    db '{"v":1,"client_id":"%s"}', 0
+
+discord_nonce:
+    db "647d814a-4cf8-4fbb-948f-898abd24f55b", 0
+
+discord_name:
+    db "Shaiya", 0
+
+; The activity update JSON format.
+discord_activity_format:
+    db '{"cmd": "SET_ACTIVITY", "args": { "pid": %d, "activity": {'
+    db '"name": "%s", "type": 0, "created_at": 1619556010'
+    db '}}, "nonce": "%s"}', 0
 
 ; Initialises the discord IPC client.
 init_discord_ipc:
@@ -75,7 +88,6 @@ discord_pipe_search_loop:
 
     ; Handshake with the Discord client.
     call discord_send_handshake
-
 discord_pipe_exit:
     pop edi
     mov esp, ebp
@@ -115,7 +127,9 @@ discord_send_frame_strlen_loop:
 
     ; Write the command opcode and length
     mov dword [esp], ecx
+    dec eax
     mov dword [esp+4], eax
+    inc eax
 
 discord_send_frame_payload_loop:
     mov bl, byte [esi+eax]
@@ -127,6 +141,7 @@ discord_send_frame_payload_loop:
 discord_send_frame_payload_loop_exit:
 
     ; Write the payload
+    dec edi
     mov ebx, esp
     push 0                          ; lpOverlapped
     push discord_num_bytes_written  ; lpNumberOfBytesWritten
@@ -168,6 +183,35 @@ discord_send_handshake:
     push edi
     call discord_send_frame
     add esp, 2060
+
+    mov esp, ebp
+    pop ebp
+    retn
+
+; Sends an activity update to Discord.
+discord_activity_update:
+    push ebp
+    mov ebp, esp
+
+    ; Allocate space on the stack for the formatted command.
+    push edi
+    sub esp, 2048
+    mov edi, esp
+
+    ; Format the command.
+    push discord_nonce          ; Nonce
+    push discord_name           ; Name
+    call dword [get_current_process_id]
+    push eax
+    push discord_activity_format
+    push edi
+    call sprintf
+
+    ; Send the frame.
+    push DISCORD_OP_FRAME
+    push edi
+    call discord_send_frame
+    add esp, 2068
 
     mov esp, ebp
     pop ebp
