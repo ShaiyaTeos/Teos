@@ -28,14 +28,6 @@ discord_ipc_handle:
 discord_num_bytes_written:
     dd  0
 
-; The discord ipc payload.
-discord_ipc_payload:
-    times   256 db  0
-
-; The discord command payload.
-discord_cmd_payload:
-    times   256 db 0
-
 ; The discord application id.
 discord_application_id:
     db "816374003710427198", 0
@@ -113,19 +105,21 @@ discord_send_frame_strlen_loop:
     jne discord_send_frame_strlen_loop
 
     ; The space of the payload.
+    push ebx
     push edi
     mov edi, eax
     add edi, 8
 
-    ; Write the command opcode and length
-    mov dword [discord_ipc_payload], ecx
-    mov dword [discord_ipc_payload+4], eax
+    ; Allocate space on the stack for the payload
+    sub esp, 2048
 
-    ; Copy the payload
-    push ebx
+    ; Write the command opcode and length
+    mov dword [esp], ecx
+    mov dword [esp+4], eax
+
 discord_send_frame_payload_loop:
     mov bl, byte [esi+eax]
-    mov byte [discord_ipc_payload+eax+8], bl
+    mov byte [esp+eax+8], bl
     test eax, eax
     je discord_send_frame_payload_loop_exit
     dec eax
@@ -133,13 +127,15 @@ discord_send_frame_payload_loop:
 discord_send_frame_payload_loop_exit:
 
     ; Write the payload
+    mov ebx, esp
     push 0                          ; lpOverlapped
     push discord_num_bytes_written  ; lpNumberOfBytesWritten
     push edi                        ; nNumberOfBytesToWrite
-    push discord_ipc_payload        ; lpBuffer
+    push ebx                        ; lpBuffer
     mov eax, dword [discord_ipc_handle]
     push eax
     call dword [write_file]
+    add esp, 2048
 
     ; Restore the stack
     pop ebx
@@ -156,17 +152,22 @@ discord_send_handshake:
     push ebp
     mov ebp, esp
 
+    ; Allocate space on the stack for the formatted command.
+    push edi
+    sub esp, 2048
+    mov edi, esp
+
     ; Format the handshake frame.
     push discord_application_id
     push discord_handshake_format
-    push discord_cmd_payload
+    push edi
     call sprintf
-    add esp, 12
 
     ; Send the frame.
     push DISCORD_OP_HANDSHAKE
-    push discord_cmd_payload
+    push edi
     call discord_send_frame
+    add esp, 2060
 
     mov esp, ebp
     pop ebp
