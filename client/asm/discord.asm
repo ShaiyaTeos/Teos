@@ -1,6 +1,9 @@
 create_file_a           equ 0x7002EC    ; The Kernel32.CreateFileA function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea)
 write_file              equ 0x700244    ; The Kernel32.WriteFile function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+read_file               equ 0x700278    ; The Kernel32.ReadFile function (https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 get_current_process_id  equ 0x700324    ; The Kernel32.GetCurrentProcessId function (https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
+sleep                   equ 0x700300    ; The Kernel32.Sleep function (https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
+create_thread           equ 0x700138    ; The Kernel32.CreateThread function (https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 
 ; File access constants.
 generic_read    equ 0x80000000
@@ -29,6 +32,10 @@ discord_ipc_handle:
 discord_num_bytes_written:
     dd  0
 
+; Contains the number of bytes read from the discord pipe.
+discord_num_bytes_read:
+    dd  0
+
 ; The discord application id.
 discord_application_id:
     db "816374003710427198", 0
@@ -37,17 +44,18 @@ discord_application_id:
 discord_handshake_format:
     db '{"v":1,"client_id":"%s"}', 0
 
-discord_nonce:
-    db "647d814a-4cf8-4fbb-948f-898abd24f55b", 0
+; The large image key.
+discord_large_image_key:
+    db "bigshaiya", 0
 
-discord_name:
-    db "Shaiya", 0
+; The name of the player's map
+player_map_name:
+    times 128 db 0
 
 ; The activity update JSON format.
 discord_activity_format:
-    db '{"cmd": "SET_ACTIVITY", "args": { "pid": %d, "activity": {'
-    db '"name": "%s", "type": 0, "created_at": 1619556010'
-    db '}}, "nonce": "%s"}', 0
+    db '{"nonce":"1","cmd":"SET_ACTIVITY","args":{"pid":%d, "activity":{'
+    db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"%s"},"instance":false}}}', 0
 
 ; Initialises the discord IPC client.
 init_discord_ipc:
@@ -88,6 +96,16 @@ discord_pipe_search_loop:
 
     ; Handshake with the Discord client.
     call discord_send_handshake
+
+    ; Create a thread for updating the activity
+    push 0                          ; lpThreadId
+    push 0                          ; dwCreationFlags
+    push 0                          ; lpParameter
+    push discord_activity_thread    ; lpStartAddress
+    push 0                          ; dwStackSize
+    push 0                          ; lpThreadAttributes
+    call dword [create_thread]
+
 discord_pipe_exit:
     pop edi
     mov esp, ebp
@@ -162,6 +180,44 @@ discord_send_frame_payload_loop_exit:
     pop ebp
     retn 8
 
+; Reads a frame from the Discord IPC client.
+discord_read_frame:
+    push ebp
+    mov ebp, esp
+
+    ; Allocate space on the stack for the response.
+    push edi
+    sub esp, 2048
+    mov edi, esp
+
+    ; Read a frame header.
+    push 0                      ; lpOverlapped
+    push discord_num_bytes_read ; lpNumberOfBytesRead
+    push 8                      ; nNumberOfBytesToRead (frame header is u32 opcode, u32 len)
+    push edi                    ; lpBuffer
+    mov eax, dword [discord_ipc_handle]
+    push eax                    ; hFile
+    call dword [read_file]
+
+    ; Read the frame payload.
+    push 0                      ; lpOverlapped
+    push discord_num_bytes_read ; lpNumberOfBytesRead
+    mov eax, dword [edi + 4]
+    push eax                    ; nNumberOfBytesToRead
+    add edi, 8
+    push edi                    ; lpBuffer
+    mov eax, dword [discord_ipc_handle]
+    push eax                    ; hFile
+    call dword [read_file]
+
+    ; Clean up the stack.
+    add esp, 2048
+    pop edi
+
+    mov esp, ebp
+    pop ebp
+    retn
+
 ; Sends the handshake to the Discord IPC client.
 discord_send_handshake:
     push ebp
@@ -184,6 +240,27 @@ discord_send_handshake:
     call discord_send_frame
     add esp, 2060
 
+    ; Read the response
+    call discord_read_frame
+
+    mov esp, ebp
+    pop ebp
+    retn
+
+; Handles the execution of the activity update thread.
+discord_activity_thread:
+    push ebp
+    mov ebp, esp
+
+discord_activity_thread_loop:
+    ; Sleep for 1 second.
+    push 1000
+    call dword [sleep]
+
+    ; Update the rich presence
+    call discord_activity_update
+    jmp discord_activity_thread_loop
+
     mov esp, ebp
     pop ebp
     retn
@@ -193,14 +270,31 @@ discord_activity_update:
     push ebp
     mov ebp, esp
 
+    ; If the user isn't logged in to a character, do nothing.
+    cmp dword [player_id], 0
+    je discord_activity_exit
+
+    ; Get the current map name.
+    push ecx
+    mov eax, dword [player_map]
+    push eax
+    push player_map_name
+    mov ecx, file_client
+    call get_map_name
+    pop ecx
+
     ; Allocate space on the stack for the formatted command.
     push edi
     sub esp, 2048
     mov edi, esp
 
     ; Format the command.
-    push discord_nonce          ; Nonce
-    push discord_name           ; Name
+    push discord_large_image_key
+    push char_name_addr
+    xor eax, eax
+    mov ax, word [player_level]
+    push eax
+    push player_map_name
     call dword [get_current_process_id]
     push eax
     push discord_activity_format
@@ -211,8 +305,13 @@ discord_activity_update:
     push DISCORD_OP_FRAME
     push edi
     call discord_send_frame
-    add esp, 2068
+    add esp, 2076
 
+    ; Read the response
+    call discord_read_frame
+    pop edi
+
+discord_activity_exit:
     mov esp, ebp
     pop ebp
     retn
