@@ -45,8 +45,8 @@ rsrc_end        equ         virt.rsrc + rsrc_vsize
 ; .teos
 virt.teos       equ         imagebase + 0x1EBC000
 raw.teos        equ         0x37B600
-rsize.teos      equ         0x1000
-teos_vsize      equ         0x1000
+rsize.teos      equ         0x2000
+teos_vsize      equ         0x2000
 teos_end        equ         virt.teos + teos_vsize
 
 ; pre-define all sections
