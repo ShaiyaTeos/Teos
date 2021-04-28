@@ -305,7 +305,7 @@ discord_activity_update:
     push DISCORD_OP_FRAME
     push edi
     call discord_send_frame
-    add esp, 2076
+    add esp, 2080
 
     ; Read the response
     call discord_read_frame
