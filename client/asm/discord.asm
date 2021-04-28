@@ -54,6 +54,10 @@ discord_activity_format:
     db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"bigshaiya","small_image":"kill_rank_%d","small_text":"%d kills"},'
     db '"instance":false}}}', 0
 
+; The clear activity command.
+discord_clear_activity:
+    db '{"nonce":"1", "cmd":"SET_ACTIVITY","args":{"pid":%d}}',0
+
 ; Initialises the discord IPC client.
 init_discord_ipc:
     push ebp
@@ -300,10 +304,34 @@ discord_activity_update:
     cmp dword [discord_ipc_handle], 0
     je discord_activity_exit
 
-    ; If the user isn't logged in to a character, do nothing.
+    ; If the user is logged in to a character, set the activity.
     cmp dword [player_id], 0
-    je discord_activity_exit
+    jne discord_activity_update_player
 
+    ; Allocate space on the stack for the formatted command.
+    push edi
+    sub esp, 256
+    mov edi, esp
+
+    ; Format the activity
+    call dword [get_current_process_id]
+    push eax
+    push discord_clear_activity
+    push edi
+    call sprintf
+
+    ; Clear the activity.
+    push DISCORD_OP_FRAME
+    push edi
+    call discord_send_frame
+    add esp, 268
+    pop edi
+
+    ; Read the response
+    call discord_read_frame
+    jmp discord_activity_exit
+
+discord_activity_update_player:
     ; Get the current map name.
     push ecx
     mov eax, dword [player_map]
