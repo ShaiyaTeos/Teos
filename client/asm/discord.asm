@@ -93,6 +93,16 @@ discord_pipe_search_loop:
 
     ; Handshake with the Discord client.
     call discord_send_handshake
+discord_pipe_exit:
+    pop edi
+    mov esp, ebp
+    pop ebp
+    retn
+
+; Initialise the Discord IPC activity thread.
+init_discord_activity_thread:
+    push ebp
+    mov ebp, esp
 
     ; Create a thread for updating the activity
     push 0                          ; lpThreadId
@@ -103,8 +113,6 @@ discord_pipe_search_loop:
     push 0                          ; lpThreadAttributes
     call dword [create_thread]
 
-discord_pipe_exit:
-    pop edi
     mov esp, ebp
     pop ebp
     retn
@@ -167,6 +175,13 @@ discord_send_frame_payload_loop_exit:
     call dword [write_file]
     add esp, 2048
 
+    ; Compare the bytes written to the bytes requested
+    cmp dword [discord_num_bytes_written], edi
+    je discord_send_frame_exit
+
+    ; Zero-out the IPC file.
+    mov dword [discord_ipc_handle], 0
+discord_send_frame_exit:
     ; Restore the stack
     pop ebx
     pop edi
@@ -250,6 +265,19 @@ discord_activity_thread:
     mov ebp, esp
 
 discord_activity_thread_loop:
+    ; If the Discord connection isn't active, exit this thread
+    cmp dword [discord_ipc_handle], 0
+    jne discord_activity_thread_exec
+
+    ; Attempt to re-establish a connection
+    call init_discord_ipc
+
+    ; Sleep for 5 seconds
+    push 5000
+    call dword [sleep]
+    jmp discord_activity_thread_loop
+
+discord_activity_thread_exec:
     ; Sleep for 1 second.
     push 1000
     call dword [sleep]
@@ -258,6 +286,7 @@ discord_activity_thread_loop:
     call discord_activity_update
     jmp discord_activity_thread_loop
 
+discord_activity_thread_exit:
     mov esp, ebp
     pop ebp
     retn
@@ -266,6 +295,10 @@ discord_activity_thread_loop:
 discord_activity_update:
     push ebp
     mov ebp, esp
+
+    ; If the Discord IPC client value is null, do nothing
+    cmp dword [discord_ipc_handle], 0
+    je discord_activity_exit
 
     ; If the user isn't logged in to a character, do nothing.
     cmp dword [player_id], 0

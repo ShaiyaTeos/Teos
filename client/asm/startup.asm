@@ -17,8 +17,9 @@ startup:
     pushad
     pushfd
 
-    call init_discord_ipc           ; Initialise the Discord IPC client, for rich presence.
-    call load_costume_definitions   ; Load the costume definitions.
+    call init_discord_ipc               ; Initialise the Discord IPC client, for rich presence.
+    call init_discord_activity_thread   ; Initialise the thread for updating the Discord activity.
+    call load_costume_definitions       ; Load the costume definitions.
 
     ; Restore state
     popfd
