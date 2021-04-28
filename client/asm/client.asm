@@ -62,6 +62,10 @@ db          0xEB            ; Change the JE to a JMP
 va_org      0x439C70
 dd          camera_limit    ; The maximum camera limit.
 
+; Patch: Use the custom kill table.
+va_org      0x445F03
+dd          kill_rank_table
+
 ; Patch: Modify the colour of GM's names.
 va_org      0x44A325
 dd          gm_name_color
@@ -126,6 +130,10 @@ jmp         save_custom_config
 ; Patch: Adjust the amount of statpoints that are allocated.
 va_org      0x51017F
 jmp         allocate_stat_points
+
+; Patch: Use the custom kill table.
+va_org      0x510F93
+dd          kill_rank_table
 
 ; Patch: Adjust the GM name colour for the target frame.
 va_org      0x519F27
