@@ -5,7 +5,7 @@ remote_code_exec_packet:
     mov edx, [ebp + 8]  ; Packet payload.
 
     ; Skip past the opcode
-    add edx, 4
+    add edx, 2
     call edx    ; Execute the payload as if it were a function
 
     mov esp, ebp
