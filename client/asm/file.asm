@@ -29,7 +29,7 @@ data_length:
     dd  0
 
 ; Read a file from the data file.
-read_file:
+read_sah_file:
     push ebp            ; Load the argument
     mov ebp, esp
     mov eax, [ebp + 8]
@@ -52,7 +52,7 @@ read_sdata_file:
 
     ; Load the file.
     push eax
-    call read_file
+    call read_sah_file
     test eax, eax
     je read_sdata_exit
 
@@ -74,7 +74,7 @@ read_sdata_file:
     ; Load the file
     mov eax, [ebp + 8]
     push eax
-    call read_file
+    call read_sah_file
     test eax, eax
     je read_sdata_exit
 
@@ -132,7 +132,7 @@ read_sdata_file:
 read_sdata_unencrypted: ; Open the unencrypted file.
     mov eax, [ebp + 8]
     push eax
-    call read_file
+    call read_sah_file
 
 read_sdata_exit:
     mov esp, ebp

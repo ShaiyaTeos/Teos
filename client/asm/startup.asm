@@ -13,8 +13,17 @@ startup:
     ; Mark the startup as completed.
     mov byte [startup_flag], 1
 
-    ; Load the costume definitions.
-    call load_costume_definitions
+    ; Preserve whatever state is needed
+    pushad
+    pushfd
+
+    call init_discord_ipc               ; Initialise the Discord IPC client, for rich presence.
+    call init_discord_activity_thread   ; Initialise the thread for updating the Discord activity.
+    call load_costume_definitions       ; Load the costume definitions.
+
+    ; Restore state
+    popfd
+    popad
 
 startup_exit:
     ; Render the login screen.
