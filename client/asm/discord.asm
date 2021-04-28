@@ -38,15 +38,11 @@ discord_num_bytes_read:
 
 ; The discord application id.
 discord_application_id:
-    db "816374003710427198", 0
+    db "836858659128213515", 0
 
 ; The handshake JSON format.
 discord_handshake_format:
     db '{"v":1,"client_id":"%s"}', 0
-
-; The large image key.
-discord_large_image_key:
-    db "bigshaiya", 0
 
 ; The name of the player's map
 player_map_name:
@@ -55,7 +51,7 @@ player_map_name:
 ; The activity update JSON format.
 discord_activity_format:
     db '{"nonce":"1","cmd":"SET_ACTIVITY","args":{"pid":%d, "activity":{'
-    db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"%s"},"instance":false}}}', 0
+    db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"bigshaiya", "small_image": "kill_rank_%d"},"instance":false}}}', 0
 
 ; Initialises the discord IPC client.
 init_discord_ipc:
@@ -289,7 +285,8 @@ discord_activity_update:
     mov edi, esp
 
     ; Format the command.
-    push discord_large_image_key
+    call get_player_kill_rank
+    push eax
     push char_name_addr
     xor eax, eax
     mov ax, word [player_level]

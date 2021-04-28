@@ -179,6 +179,7 @@ va_section  .teos
 %include    "asm/startup.asm"
 %include    "asm/buffs.asm"
 %include    "asm/discord.asm"
+%include    "asm/kills.asm"
 
 ; Append the rest of the data
 va_org      end
