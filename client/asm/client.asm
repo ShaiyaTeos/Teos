@@ -155,6 +155,10 @@ jmp         reset_window_title
 va_org      0x5BE6C5
 jmp         read_summon_packet
 
+; Patch: Read custom packets
+va_org      0x5C7640
+jmp         check_inbound_custom_packets
+
 ; Include read-only resources
 va_section  .rdata
 
@@ -188,6 +192,7 @@ va_section  .teos
 %include    "asm/buffs.asm"
 %include    "asm/discord.asm"
 %include    "asm/kills.asm"
+%include    "asm/packets.asm"
 
 ; Append the rest of the data
 va_org      end
