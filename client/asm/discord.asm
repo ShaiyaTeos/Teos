@@ -51,7 +51,8 @@ player_map_name:
 ; The activity update JSON format.
 discord_activity_format:
     db '{"nonce":"1","cmd":"SET_ACTIVITY","args":{"pid":%d, "activity":{'
-    db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"bigshaiya", "small_image": "kill_rank_%d"},"instance":false}}}', 0
+    db '"state":"%s","details":"Lv.%d %s","assets":{"large_image":"bigshaiya","small_image":"kill_rank_%d","small_text":"%d kills"},'
+    db '"instance":false}}}', 0
 
 ; Initialises the discord IPC client.
 init_discord_ipc:
@@ -285,6 +286,8 @@ discord_activity_update:
     mov edi, esp
 
     ; Format the command.
+    mov eax, dword [player_kills]
+    push eax
     call get_player_kill_rank
     push eax
     push char_name_addr
