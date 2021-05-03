@@ -1,0 +1,1 @@
+nameFunc(0x4A8FD0, "drawSkillIcon", return_type="u32", args=[("opacity","u32"),("x","u32"),("y","u32"),("skill_id","u32"),("skill_level","u32"),("is_learned_skill","bool")])

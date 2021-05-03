@@ -1,0 +1,1 @@
+nameSymbol(0x8B54EC, "g_isRaining")

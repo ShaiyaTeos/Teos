@@ -1,0 +1,13 @@
+nameSymbol(0x8B541C, "g_playerAddr")
+nameSymbol(0x8BEB78, "g_playerId")
+nameSymbol(0x22563CC, "g_playerKills")
+nameSymbol(0x8BDA68, "g_playerLevel")
+nameSymbol(0x8BEB64, "g_playerMap")
+nameSymbol(0x8B5444, "g_posX")
+nameSymbol(0x8B5448, "g_posY")
+nameSymbol(0x8B544C, "g_posZ")
+nameSymbol(0x8BDA5C, "g_adminStatus")
+nameSymbol(0x2256AFC, "g_summonPlayerName")
+nameSymbol(0x8C1260, "g_playerName")
+
+nameFunc(0x4498C0, "getPlayerForId", return_type="u32", args=[("player_id","u32")])

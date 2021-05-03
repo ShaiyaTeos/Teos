@@ -1,0 +1,2 @@
+nameFunc(0x4D8B90, "getMapNameForId", return_type="bool", args=[("dest","ptr"),("map_id","u16")])
+nameFunc(0x41F1D0, "writeTextToChatBox", return_type="void", args=[("effect_code","u8"),("text","string"),("chat_channel","u8")])

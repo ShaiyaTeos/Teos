@@ -1,0 +1,7 @@
+nameSymbol(0x771EC4, "g_isWindowFocused")
+nameSymbol(0x771EB8, "g_windowHandle")
+nameSymbol(0x75D0D8, "g_windowWidth")
+nameSymbol(0x75D0DC, "g_windowHeight")
+nameSymbol(0x225A494, "g_resolutionIndex")
+nameSymbol(0x75D0E8, "g_resolutionWidth")
+nameSymbol(0x75D0EC, "g_resolutionHeight")
