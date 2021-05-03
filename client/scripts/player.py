@@ -10,4 +10,4 @@ nameSymbol(0x8BDA5C, "g_adminStatus")
 nameSymbol(0x2256AFC, "g_summonPlayerName")
 nameSymbol(0x8C1260, "g_playerName")
 
-nameFunc(0x4498C0, "getPlayerForId", return_type="u32", player_id="u32")
+nameFunc(0x4498C0, "getPlayerForId", return_type="u32", args=[("player_id","u32")])

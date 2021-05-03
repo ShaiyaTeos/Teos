@@ -4,7 +4,8 @@
 from ghidra.program.model.symbol import SourceType
 from ghidra.app.cmd.function import ApplyFunctionSignatureCmd
 from ghidra.program.model.listing import FunctionSignature
-from ghidra.program.model.data import FunctionDefinitionDataType, ParameterDefinition, ParameterDefinitionImpl, ByteDataType, BooleanDataType, IntegerDataType, Pointer32DataType, FloatDataType, StructureDataType, VoidDataType
+from ghidra.program.model.data import FunctionDefinitionDataType, ParameterDefinition, ParameterDefinitionImpl, ByteDataType, BooleanDataType, ShortDataType, IntegerDataType, Pointer32DataType, FloatDataType, StructureDataType, VoidDataType
+from collections import OrderedDict
 
 # Helper function to get a Ghidra Address type
 def getAddress(offset):
@@ -24,6 +25,8 @@ def createDataType(name):
         return ByteDataType()
     elif name == "bool":
         return BooleanDataType()
+    elif name == "u16":
+        return ShortDataType()
     elif name == "u32":
         return IntegerDataType()
     elif name == "f32":
@@ -35,8 +38,8 @@ def createDataType(name):
     else:
         return StructureDataType(name, 2)
 
-# Healer function to either name or create a function symbol.
-def nameFunc(addr, name, return_type, **kwargs):
+# Helper function to either name or create a function symbol, and refactor it's signature.
+def nameFunc(addr, name, return_type, args=[]):
     var = getSymbolAt(getAddress(addr))
     if var == None:
         createLabel(getAddress(addr), name, False)
@@ -45,11 +48,12 @@ def nameFunc(addr, name, return_type, **kwargs):
 
     f = FunctionDefinitionDataType(name)
     f.setReturnType(createDataType(return_type))
-    
-    params = [None] * len(kwargs)
-    for i in range(0, len(kwargs)):
-        param = list(kwargs)[i]
-        type = list(kwargs.values())[i]
+
+    print(len(args))
+    print(args)
+    params = [None] * len(args)
+    for i in range(0, len(args)):
+        param, type = args[i]
 
         params[i] = ParameterDefinitionImpl(param, createDataType(type), None)
     f.setArguments(params)
