@@ -1,0 +1,1 @@
+nameSymbol(0x4A8FD0, "drawSkillIcon")
