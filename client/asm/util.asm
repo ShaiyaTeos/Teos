@@ -8,6 +8,7 @@ memset                  equ 0x5FEB80    ; The C function for setting a block of 
 play_animation          equ 0x412B50    ; The function for playing an animation.
 digit_format            equ 0x702358    ; The formatter for a digit.
 sscanf                  equ 0x5FE47D    ; The C function for scanning from a string.
+sysmsg_for_id           equ 0x41CC60    ; The function for getting a Sysmsg for a given id.
 effect_code_white       equ 0           ; The effect code for white text.
 effect_code_top_orange  equ 13          ; The effect code for writing orange text to the top chat box.
 effect_code_top_red     equ 14          ; The effect code for writing red text to the top chat box.
@@ -124,6 +125,35 @@ string_compare_exit:
     pop ecx
     pop esi
     pop edi
+    mov esp, ebp
+    pop ebp
+    retn 8
+
+; Copies a string.
+;
+; Usage:
+; push source
+; push dest
+; call strcpy
+strcpy:
+    push ebp
+    mov ebp, esp
+
+    mov edi, [ebp + 8]
+    mov esi, [ebp + 12]
+    xor ebx, ebx
+    xor eax, eax
+strcpy_loop:
+    mov bl, byte [esi+eax]
+    test bl, bl
+    je strcpy_exit
+    mov [edi+eax], bl
+    inc eax
+    jmp strcpy_loop
+strcpy_exit:
+    inc eax
+    xor ebx, ebx
+    mov [edi+eax], bl
     mov esp, ebp
     pop ebp
     retn 8

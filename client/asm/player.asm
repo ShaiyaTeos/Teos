@@ -18,12 +18,13 @@ struc CUser
     .unknown3       resb    419
     .admin_status   resb    1
     .unknown4       resb    343
-    .title          resd    1
+    .has_title      resb    1
+    .title          resb    32
 endstruc
 
 ; Modifies the CUser constructor slightly to also zero-out custom fields.
 cuser_constructor:
-    mov dword [esi+CUser.title], ebx
+    mov byte [esi+CUser.has_title], bl  ; Don't need to clear the title as it's only displayed if the flag is set anyway.
     pop ecx
     pop edi
     pop esi
