@@ -12,5 +12,7 @@ nameSymbol(0x8C1260, "g_playerName")
 nameFunc(0x4498C0, "getPlayerForId", return_type="u32", args=[("player_id","u32")])
 
 cuser_class = createClass("CUser")
-cuser_struct = StructureDataType("CUser", 100)  # TODO: Structure fields and length.
+cuser_struct = StructureDataType("CUser", 1024)
+
 nameFunc(0x449720, "~CUser", this=cuser_struct, return_type="void", namespace=cuser_class, args=[("type","u8")])
+nameFunc(0x416510, "CUser", this=cuser_struct, return_type="ptr", namespace=cuser_class)
