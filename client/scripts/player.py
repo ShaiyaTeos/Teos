@@ -9,5 +9,8 @@ nameSymbol(0x8B544C, "g_posZ")
 nameSymbol(0x8BDA5C, "g_adminStatus")
 nameSymbol(0x2256AFC, "g_summonPlayerName")
 nameSymbol(0x8C1260, "g_playerName")
-
 nameFunc(0x4498C0, "getPlayerForId", return_type="u32", args=[("player_id","u32")])
+
+cuser_class = createClass("CUser")
+cuser_struct = StructureDataType("CUser", 100)  # TODO: Structure fields and length.
+nameFunc(0x449720, "~CUser", this=cuser_struct, return_type="void", namespace=cuser_class, args=[("type","u8")])
