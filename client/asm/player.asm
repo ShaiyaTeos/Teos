@@ -10,8 +10,6 @@ player_kills    equ 0x22563CC   ; Stores the player's kills.
 player_level    equ 0x8BDA68    ; Stores the player's level.
 client_base     equ 0x775550    ; Not sure what this does but it's required for getting player instances.
 
-cuser_size      equ 1536        ; The number of bytes to allocate each player.
-
 struc CUser
     .unknown        resb    52
     .id             resd    1

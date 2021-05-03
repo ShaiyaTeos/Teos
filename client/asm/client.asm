@@ -44,9 +44,9 @@ jmp         toggle_effects_secondary
 
 ; Patch: Modify the amount of memory allocated to each player.
 va_org      0x419327
-dd          cuser_size
+dd          CUser_size
 va_org      0x41B477
-dd          cuser_size
+dd          CUser_size
 
 ; Patch: Run startup code before rendering login screen.
 va_org      0x42CA40
@@ -86,11 +86,11 @@ jmp         toggle_effects_primary
 
 ; Patch: Modify the amount of memory allocated to each player.
 va_org      0x46747F
-dd          cuser_size
+dd          CUser_size
 va_org      0x467625
-dd          cuser_size
+dd          CUser_size
 va_org      0x46E3CF
-dd          cuser_size
+dd          CUser_size
 
 ; Patch: Update the window title when the user selects a character
 va_org      0x46F890
@@ -106,7 +106,7 @@ times       6 nop
 
 ; Patch: Modify the amount of memory allocated to each player.
 va_org      0x484FC0
-dd          cuser_size
+dd          CUser_size
 
 ; Patch: Apply the shadow on the item stack quantity to all item types.
 va_org      0x4A8E52
@@ -147,7 +147,7 @@ nop
 
 ; Patch: Modify the amount of memory allocated to each player.
 va_org      0x4DAB58
-dd          cuser_size
+dd          CUser_size
 
 ; Patch: Save custom config options.
 va_org      0x502BA3
@@ -175,9 +175,9 @@ jmp         format_debug_info
 
 ; Patch: Modify the amount of memory allocated to each player.
 va_org      0x573FFF
-dd          cuser_size
+dd          CUser_size
 va_org      0x57424D
-dd          cuser_size
+dd          CUser_size
 
 ; Patch: Reset the window title when we enter the character screen
 va_org      0x5B5070
