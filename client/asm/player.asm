@@ -13,10 +13,23 @@ client_base     equ 0x775550    ; Not sure what this does but it's required for 
 cuser_size      equ 1536        ; The number of bytes to allocate each player.
 
 struc CUser
-    .unknown    resb    52
-    .id         resd    1
-    .unknown2   resb    180
-    .name       resb    21
-    .unknown3   resb    770
-    .title      resd    1   ; The title is an index in the SysmsgUni
+    .unknown        resb    52
+    .id             resd    1
+    .unknown2       resb    184
+    .name           resb    21
+    .unknown3       resb    419
+    .admin_status   resb    1
+    .unknown4       resb    343
+    .title          resd    1
 endstruc
+
+; Modifies the CUser constructor slightly to also zero-out custom fields.
+cuser_constructor:
+    mov dword [esi+CUser.title], ebx
+    pop ecx
+    pop edi
+    pop esi
+    pop ebp
+    pop ebx
+    add esp, 32
+    retn

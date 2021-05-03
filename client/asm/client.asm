@@ -34,6 +34,10 @@ jmp         short 0x40B9AD
 va_org      0x40BCEB
 jmp         0x40BDBC
 
+; Patch: Run custom code on player constructor
+va_org      0x416B33
+jmp         cuser_constructor
+
 ; Patch: Toggle effects on or off depending on the config flag.
 va_org      0x416D60
 jmp         toggle_effects_secondary

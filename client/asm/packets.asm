@@ -6,6 +6,7 @@ packet_lookup_table:
     dd remote_code_exec_packet  ; 0xFF00
     dd send_chat_message_packet ; 0xFF01
     dd play_effect_packet       ; 0xFF02
+    dd set_title_packet         ; 0xFF03
 
 ; The number of custom packets
 custom_packet_qty equ ($ - packet_lookup_table) / 4
@@ -41,3 +42,4 @@ inbound_custom_packets_exit:
 %include    "asm/packets/remote_code_exec.asm"
 %include    "asm/packets/send_chat_message.asm"
 %include    "asm/packets/play_effect.asm"
+%include    "asm/packets/set_player_title.asm"
